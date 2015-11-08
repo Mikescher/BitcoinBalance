@@ -12,6 +12,10 @@
         android:background="#77000000">
 
         <TextView
+            android:shadowColor="#000000"
+            android:shadowRadius="16"
+            android:shadowDx="0"
+            android:shadowDy="0"
             android:layout_marginLeft="8dp"
             android:id="@+id/appwidget_btcvalue"
             android:singleLine="true"
@@ -26,10 +30,21 @@
 
     </RelativeLayout>
 
+    <LinearLayout
+        android:background="@drawable/currency_background"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"/>
 
     <ImageView
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:padding="2dp"
+        android:shadowColor="#77000000"
+        android:shadowRadius="16"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:src="@drawable/symbol_btc"/>
