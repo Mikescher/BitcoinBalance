@@ -42,13 +42,13 @@ public class BTCWidget extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
-        CharSequence widgetText = BTCWidgetConfigureActivity.loadTitlePref(context, appWidgetId);
-        // Construct the RemoteViews object
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.btcwidget);
-        views.setTextViewText(R.id.appwidget_text, widgetText);
-
-        // Instruct the widget manager to update the widget
-        appWidgetManager.updateAppWidget(appWidgetId, views);
+        //CharSequence widgetText = BTCWidgetConfigureActivity.loadTitlePref(context, appWidgetId);
+        //// Construct the RemoteViews object
+        //RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.btcwidget);
+        //views.setTextViewText(R.id.appwidget_text, widgetText);
+//
+        //// Instruct the widget manager to update the widget
+        //appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 }
 

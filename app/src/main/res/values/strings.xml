@@ -1,5 +1,15 @@
 <resources>
     <string name="app_name">Bitcoin Balance Widget</string>
-    <string name="configure">Configure</string>
-    <string name="add_widget">Add widget</string>
+
+    <string name="addresses">Addresses:</string>
+    <string name="unit">Unit:</string>
+
+    <string name="unit0">BTC</string>
+    <string name="unit1">mBTC</string>
+    <string name="unit2">bits</string>
+    <string name="unit3">Satoshi</string>
+
+    <string name="add_manual">Add</string>
+    <string name="add_widget">Create Widget</string>
+    <string name="abort_widget">Abort</string>
 </resources>
