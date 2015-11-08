@@ -5,11 +5,14 @@
     android:orientation="horizontal"
     android:background="@android:color/transparent">
 
+    <samdev.de.bitcoinbalance.WidgetBackgroundView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
+
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_margin="12dp"
-        android:background="#77000000">
+        android:layout_margin="12dp">
 
         <TextView
             android:shadowColor="#000000"
