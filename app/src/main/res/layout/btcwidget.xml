@@ -1,24 +1,38 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="8dp"
-    android:rowCount="4"
-    android:columnCount="4"
+    android:padding="0dp"
     android:orientation="horizontal"
-    android:background="#DD000000">
+    android:background="@android:color/transparent">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="#DDFF0000"/>
+        android:layout_margin="12dp"
+        android:background="#77000000">
+
+        <TextView
+            android:layout_marginLeft="8dp"
+            android:id="@+id/appwidget_btcvalue"
+            android:singleLine="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|left"
+            android:textStyle="bold"
+            android:text="0.40 BTC "
+            android:textColor="#ffffff"
+            android:textSize="30sp"
+            android:contentDescription="EXAMPLE"/>
+
+    </RelativeLayout>
 
 
     <ImageView
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_gravity="bottom|right"
-        android:src="@drawable/symbol_ubtc"/>
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/symbol_btc"/>
+
 
 </RelativeLayout>
