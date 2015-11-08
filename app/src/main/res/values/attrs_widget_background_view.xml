@@ -1,8 +1,0 @@
-<resources>
-    <declare-styleable name="WidgetBackgroundView">
-        <attr name="currencyRadius" format="dimension" />
-        <attr name="currencyBorder" format="dimension" />
-        <attr name="padding" format="dimension" />
-        <attr name="backgroundColor" format="color" />
-    </declare-styleable>
-</resources>
