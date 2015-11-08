@@ -5,6 +5,8 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.widget.RemoteViews;
 
+import java.util.List;
+
 /**
  * Implementation of App Widget functionality.
  * App Widget Configuration implemented in {@link BTCWidgetConfigureActivity BTCWidgetConfigureActivity}
@@ -25,7 +27,8 @@ public class BTCWidget extends AppWidgetProvider {
         // When the user deletes the widget, delete the preference associated with it.
         final int N = appWidgetIds.length;
         for (int i = 0; i < N; i++) {
-            BTCWidgetConfigureActivity.deleteTitlePref(context, appWidgetIds[i]);
+            BTCWidgetConfigureActivity.deletePref(context, appWidgetIds[i], "addresses");
+            BTCWidgetConfigureActivity.deletePref(context, appWidgetIds[i], "unit");
         }
     }
 
@@ -39,8 +42,14 @@ public class BTCWidget extends AppWidgetProvider {
         // Enter relevant functionality for when the last widget is disabled
     }
 
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId) {
+    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
+        String allAddr = BTCWidgetConfigureActivity.loadPref(context, appWidgetId, "addresses");
+        String unitValue = BTCWidgetConfigureActivity.loadPref(context, appWidgetId, "unit");
+
+        if (allAddr == null || unitValue == null) return;
+
+        BTCUnit unit = BTCUnit.ofNumericValue(unitValue);
+        String[] addresses = allAddr.split("|");
 
         //CharSequence widgetText = BTCWidgetConfigureActivity.loadTitlePref(context, appWidgetId);
         //// Construct the RemoteViews object

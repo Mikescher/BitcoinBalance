@@ -10,7 +10,10 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
@@ -30,6 +33,9 @@ public class BTCWidgetConfigureActivity extends Activity {
     RadioButton btnUnit1;
     RadioButton btnUnit2;
     RadioButton btnUnit3;
+    Button btnFinish;
+    ListView addressView;
+    ArrayAdapter<String> addressAdapter;
 
     public List<String> addresses = new ArrayList<>();
 
@@ -45,10 +51,15 @@ public class BTCWidgetConfigureActivity extends Activity {
 
         setContentView(R.layout.btcwidget_configure);
 
-        btnUnit0 = (EditText) findViewById(R.id.rbUnit0);
-        btnUnit1 = (EditText) findViewById(R.id.rbUnit1);
-        btnUnit2 = (EditText) findViewById(R.id.rbUnit2);
-        btnUnit3 = (EditText) findViewById(R.id.rbUnit3);
+        btnUnit0    = (RadioButton) findViewById(R.id.rbUnit0);
+        btnUnit1    = (RadioButton) findViewById(R.id.rbUnit1);
+        btnUnit2    = (RadioButton) findViewById(R.id.rbUnit2);
+        btnUnit3    = (RadioButton) findViewById(R.id.rbUnit3);
+        btnFinish   = (Button) findViewById(R.id.btnAdd);
+        addressView = (ListView) findViewById(R.id.adressesList);
+
+        addressAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, addresses);
+        addressView.setAdapter(addressAdapter);
 
         findViewById(R.id.btnAddressAddManual).setOnClickListener(mOnAddAdressManual);
         findViewById(R.id.btnAddressAddQR).setOnClickListener(mOnAddAdressQR);
@@ -67,6 +78,8 @@ public class BTCWidgetConfigureActivity extends Activity {
             finish();
             return;
         }
+
+        updateUI();
     }
 
     View.OnClickListener mOnAddAdressManual = new View.OnClickListener() {
@@ -89,6 +102,7 @@ public class BTCWidgetConfigureActivity extends Activity {
                     } else {
                         Toast.makeText(context, "Invalid Bitcoin adress" , Toast.LENGTH_LONG).show();
                     }
+                    updateUI();
                 }
             });
             builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -116,7 +130,7 @@ public class BTCWidgetConfigureActivity extends Activity {
 
             // When the button is clicked, store the string locally
             savePref(context, mAppWidgetId, "unit", getSelectedUnit());
-            savePref(context, mAppWidgetId, "adresses", getAdressList());
+            savePref(context, mAppWidgetId, "addresses", getAddressList());
 
             // It is the responsibility of the configuration activity to update the app widget
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
@@ -138,6 +152,30 @@ public class BTCWidgetConfigureActivity extends Activity {
             finish();
         }
     };
+
+    private String getSelectedUnit() {
+        if (btnUnit0.isChecked()) return "0";
+        if (btnUnit1.isChecked()) return "1";
+        if (btnUnit2.isChecked()) return "2";
+        if (btnUnit3.isChecked()) return "3";
+
+        return "-1";
+    }
+
+    private String getAddressList() {
+        String result = "";
+        for (int i = 0; i < addresses.size(); i++) {
+            if (i > 0) result += "|";
+            result += addresses.get(i);
+        }
+        return result;
+    }
+
+    private void updateUI() {
+        btnFinish.setEnabled(! addresses.isEmpty());
+
+        addressAdapter.notifyDataSetChanged();
+    }
 
     static void savePref(Context context, int appWidgetId, String name, String text) {
         SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();

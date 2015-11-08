@@ -43,7 +43,6 @@
                     />
 
                 <Button
-                    android:style="?android:attr/buttonStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/add_manual"
@@ -69,33 +68,41 @@
                 android:id="@+id/textView2"
                 android:text="@string/unit" />
 
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/unit0"
-                android:id="@+id/rbUnit0"
-                android:checked="true" />
 
-            <RadioButton
-                android:layout_width="wrap_content"
+            <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/unit1"
-                android:id="@+id/rbUnit1"
-                android:layout_weight="0.87" />
+                android:orientation="vertical">
 
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/unit2"
-                android:id="@+id/rbUnit2"
-                android:layout_weight="0.87" />
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/unit0"
+                    android:id="@+id/rbUnit0"
+                    android:checked="true" />
 
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/unit3"
-                android:id="@+id/rbUnit3"
-                android:layout_weight="0.87" />
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/unit1"
+                    android:id="@+id/rbUnit1"
+                    android:layout_weight="0.87" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/unit2"
+                    android:id="@+id/rbUnit2"
+                    android:layout_weight="0.87" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/unit3"
+                    android:id="@+id/rbUnit3"
+                    android:layout_weight="0.87" />
+
+            </RadioGroup>
 
             <LinearLayout
                 android:orientation="horizontal"
