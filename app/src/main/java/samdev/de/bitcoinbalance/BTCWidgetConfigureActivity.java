@@ -87,17 +87,17 @@ public class BTCWidgetConfigureActivity extends Activity {
             final Context context = BTCWidgetConfigureActivity.this;
 
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setTitle("Title");
+            builder.setTitle("Bitcoin Address");
 
             final EditText input = new EditText(context);
             input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
             builder.setView(input);
 
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     String addr = input.getText().toString();
-                    if (BitcoinHelper.isBitcoinAdress(addr))  {
+                    if (BitcoinHelper.ValidateBitcoinAddress(addr))  {
                         addresses.add(addr);
                     } else {
                         Toast.makeText(context, "Invalid Bitcoin adress" , Toast.LENGTH_LONG).show();
