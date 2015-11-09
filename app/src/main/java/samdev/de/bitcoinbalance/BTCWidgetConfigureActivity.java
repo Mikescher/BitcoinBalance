@@ -29,15 +29,15 @@ public class BTCWidgetConfigureActivity extends Activity {
     private static final String PREFS_NAME = "samdev.de.bitcoinbalance.BTCWidget";
     private static final String PREF_PREFIX_KEY = "appwidget_";
 
-    RadioButton btnUnit0;
-    RadioButton btnUnit1;
-    RadioButton btnUnit2;
-    RadioButton btnUnit3;
-    Button btnFinish;
-    ListView addressView;
-    ArrayAdapter<String> addressAdapter;
+    private RadioButton btnUnit0;
+    private RadioButton btnUnit1;
+    private RadioButton btnUnit2;
+    private RadioButton btnUnit3;
+    private Button btnFinish;
+    private ListView addressView;
 
-    public List<String> addresses = new ArrayList<>();
+    private AddressListAdapter addressAdapter;
+    private ArrayList<String> addresses = new ArrayList<>();
 
     public BTCWidgetConfigureActivity() {
         super();
@@ -58,7 +58,7 @@ public class BTCWidgetConfigureActivity extends Activity {
         btnFinish   = (Button) findViewById(R.id.btnAdd);
         addressView = (ListView) findViewById(R.id.adressesList);
 
-        addressAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, addresses);
+        addressAdapter = new AddressListAdapter(addresses, this);
         addressView.setAdapter(addressAdapter);
 
         findViewById(R.id.btnAddressAddManual).setOnClickListener(mOnAddAdressManual);
@@ -90,7 +90,7 @@ public class BTCWidgetConfigureActivity extends Activity {
             builder.setTitle("Title");
 
             final EditText input = new EditText(context);
-            input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
             builder.setView(input);
 
             builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
