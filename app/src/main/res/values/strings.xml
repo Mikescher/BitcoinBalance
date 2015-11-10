@@ -12,4 +12,5 @@
     <string name="add_manual">Add</string>
     <string name="add_widget">Create Widget</string>
     <string name="abort_widget">Abort</string>
+    <string name="title_activity_show_address">ShowAddressActivity</string>
 </resources>

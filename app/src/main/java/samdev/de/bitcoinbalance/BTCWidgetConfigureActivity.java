@@ -98,7 +98,7 @@ public class BTCWidgetConfigureActivity extends Activity {
                 public void onClick(DialogInterface dialog, int which) {
                     String addr = input.getText().toString();
                     if (BitcoinHelper.ValidateBitcoinAddress(addr))  {
-                        addresses.add(addr);
+                        AddNewAddress(addr);
                     } else {
                         Toast.makeText(context, "Invalid Bitcoin adress" , Toast.LENGTH_LONG).show();
                     }
@@ -116,11 +116,15 @@ public class BTCWidgetConfigureActivity extends Activity {
         }
     };
 
+    private void AddNewAddress(String addr) {
+        addresses.add(addr); // TODO asynchron validate address
+    }
+
     View.OnClickListener mOnAddAdressQR = new View.OnClickListener() {
         public void onClick(View v) {
             final Context context = BTCWidgetConfigureActivity.this;
 
-            //TODO
+            //TODO qr reader
         }
     };
 
