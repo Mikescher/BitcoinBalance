@@ -1,4 +1,4 @@
-package samdev.de.bitcoinbalance;
+package samdev.de.bitcoinbalance.btc;
 
 import android.util.Log;
 

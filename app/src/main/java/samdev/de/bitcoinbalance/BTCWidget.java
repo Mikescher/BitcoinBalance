@@ -7,7 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
-import java.util.List;
+import samdev.de.bitcoinbalance.btc.BTCUnit;
 
 /**
  * Implementation of App Widget functionality.

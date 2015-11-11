@@ -1,4 +1,4 @@
-package samdev.de.bitcoinbalance;
+package samdev.de.bitcoinbalance.btc;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -51,5 +51,13 @@ public class BitcoinHelper {
         } catch (NoSuchAlgorithmException e) {
             return null;
         }
+    }
+
+    public static int GetBitcoinBalance() {
+
+    }
+
+    private static JsonObject GetJSON() {
+
     }
 }
