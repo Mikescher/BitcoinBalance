@@ -3,16 +3,9 @@ package samdev.de.bitcoinbalance.btc;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-/**
- * Created by Mike on 08.11.2015.
- */
 public class BitcoinHelper {
     private final static String BTC_ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
-
-    private static Pattern PATTERN_ADDRESS = Pattern.compile("^[A-Za-z0-9]{26}([A-Za-z0-9]?){9}$");
 
     public static boolean ValidateBitcoinAddress(String addr) {
         if (addr.length() < 26 || addr.length() > 35) return false;
@@ -51,13 +44,5 @@ public class BitcoinHelper {
         } catch (NoSuchAlgorithmException e) {
             return null;
         }
-    }
-
-    public static int GetBitcoinBalance() {
-
-    }
-
-    private static JsonObject GetJSON() {
-
     }
 }
