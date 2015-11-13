@@ -12,11 +12,14 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import samdev.de.bitcoinbalance.btc.BTCUnit;
+import samdev.de.bitcoinbalance.btc.BitcoinAddress;
+
 public class AddressListAdapter extends BaseAdapter implements ListAdapter {
-    private ArrayList<String> list = new ArrayList<String>();
+    private ArrayList<BitcoinAddress> list = new ArrayList<BitcoinAddress>();
     private Context context;
 
-    public AddressListAdapter(ArrayList<String> list, Context context) {
+    public AddressListAdapter(ArrayList<BitcoinAddress> list, Context context) {
         this.list = list;
         this.context = context;
     }
@@ -45,8 +48,16 @@ public class AddressListAdapter extends BaseAdapter implements ListAdapter {
         }
 
         TextView listItemText = (TextView)view.findViewById(R.id.list_item_string);
-        String address = list.get(position);
-        listItemText.setText(address.substring(0, 8) + " ... " + address.substring(address.length() - 8));
+        TextView listItemText2 = (TextView)view.findViewById(R.id.list_item_string2);
+
+        BitcoinAddress btcaddr = list.get(position);
+        listItemText.setText(btcaddr.getShortAddress());
+
+        if (btcaddr.isBalanceSet()) {
+            listItemText2.setText(String.format("(%s)", btcaddr.getFormattedBalance(BTCUnit.BTC)));
+        } else {
+            listItemText2.setText("");
+        }
 
         ImageButton deleteBtn = (ImageButton)view.findViewById(R.id.delete_btn);
         ImageButton topBtn = (ImageButton)view.findViewById(R.id.top_btn);
@@ -62,7 +73,7 @@ public class AddressListAdapter extends BaseAdapter implements ListAdapter {
         topBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                String element = list.get(position);
+                BitcoinAddress element = list.get(position);
                 list.remove(position);
                 list.add(0, element);
 

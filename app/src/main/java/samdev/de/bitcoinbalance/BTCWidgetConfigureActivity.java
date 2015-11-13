@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,6 +19,9 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import samdev.de.bitcoinbalance.async.TaskListener;
+import samdev.de.bitcoinbalance.async.UpdateAddressBalanceTask;
+import samdev.de.bitcoinbalance.btc.BitcoinAddress;
 import samdev.de.bitcoinbalance.btc.BitcoinHelper;
 
 /**
@@ -37,7 +41,7 @@ public class BTCWidgetConfigureActivity extends Activity {
     private ListView addressView;
 
     private AddressListAdapter addressAdapter;
-    private ArrayList<String> addresses = new ArrayList<>();
+    private ArrayList<BitcoinAddress> addresses = new ArrayList<>();
 
     public BTCWidgetConfigureActivity() {
         super();
@@ -91,6 +95,7 @@ public class BTCWidgetConfigureActivity extends Activity {
 
             final EditText input = new EditText(context);
             input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+            input.setText("1JEiV9CiJmhfYhE7MzeSdmH82xRYrbYrtb"); //TODO REMOVE ME ARGH
             builder.setView(input);
 
             builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
@@ -117,7 +122,23 @@ public class BTCWidgetConfigureActivity extends Activity {
     };
 
     private void AddNewAddress(String addr) {
-        addresses.add(addr); // TODO asynchron validate address
+        Log.d("BTCBW", "Add address: " + addr);
+
+        BitcoinAddress new_address = new BitcoinAddress(addr);
+        addresses.add(new_address);
+
+        new UpdateAddressBalanceTask(new TaskListener() {
+            @Override
+            public void onTaskStarted() {
+                Log.d("BTCBW", "Update Addr Task started");
+            }
+
+            @Override
+            public void onTaskFinished() {
+                Log.d("BTCBW", "Update Addr Task finished");
+                addressAdapter.notifyDataSetChanged();
+            }
+        }).execute(new_address);
     }
 
     View.OnClickListener mOnAddAdressQR = new View.OnClickListener() {
