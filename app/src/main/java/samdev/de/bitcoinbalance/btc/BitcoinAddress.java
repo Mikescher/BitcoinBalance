@@ -18,28 +18,22 @@ public class BitcoinAddress {
     private final static String URL_TOSHI         = "https://bitcoin.toshi.io/api/v0/addresses/%s";
     private final static String URL_BLOCKCYPHER   = "https://api.blockcypher.com/v1/btc/main/addrs/%s/balance";
 
-    private final static double CONVERSION_BTC     = 100 * 1000 * 1000;
-    private final static double CONVERSION_MBTC    = 100 * 1000;
-    private final static double CONVERSION_BITS    = 100;
-    private final static double CONVERSION_SATOSHI = 1;
 
     private final String address;
 
     private long balance = -1;
 
-    private UpdateState LastUpdateState = UpdateState.INITIAL;
+    private UpdateState lastUpdateState = UpdateState.INITIAL;
 
     public BitcoinAddress(String addr) {
         address = addr;
     }
 
     public boolean UpdateValue() {
-        LastUpdateState = UpdateState.PENDING;
-
         try {
             long v = QueryBlockchain();
             balance = v;
-            LastUpdateState = UpdateState.SUCCESS;
+            lastUpdateState = UpdateState.SUCCESS;
             return true;
         } catch (Exception e) {
             Log.w("BTCBW", "Site not reachable: blockchain.info");
@@ -48,7 +42,7 @@ public class BitcoinAddress {
         try {
             long v = QueryBlockexplorer();
             balance = v;
-            LastUpdateState = UpdateState.SUCCESS;
+            lastUpdateState = UpdateState.SUCCESS;
             return true;
         } catch (Exception e) {
             Log.w("BTCBW", "Site not reachable: blockexplorer.com");
@@ -57,7 +51,7 @@ public class BitcoinAddress {
         try {
             long v = QueryToshi();
             balance = v;
-            LastUpdateState = UpdateState.SUCCESS;
+            lastUpdateState = UpdateState.SUCCESS;
             return true;
         } catch (Exception e) {
             Log.w("BTCBW", "Site not reachable: toshi.io");
@@ -66,13 +60,18 @@ public class BitcoinAddress {
         try {
             long v = QueryBlockcypher();
             balance = v;
-            LastUpdateState = UpdateState.SUCCESS;
+            lastUpdateState = UpdateState.SUCCESS;
             return true;
         } catch (Exception e) {
             Log.w("BTCBW", "Site not reachable: blockcypher.com");
         }
 
-        LastUpdateState = UpdateState.ERROR;
+        if (lastUpdateState == UpdateState.SUCCESS || lastUpdateState == UpdateState.FALLBACK) {
+            lastUpdateState = UpdateState.FALLBACK;
+        } else {
+            balance = -1;
+            lastUpdateState = UpdateState.ERROR;
+        }
         return false;
     }
 
@@ -119,28 +118,53 @@ public class BitcoinAddress {
     }
 
     public String getFormattedBalance(BTCUnit unit) {
-
-        switch (LastUpdateState) {
-
+        switch (lastUpdateState) {
             case INITIAL:
-                return "";
+                return "...";
             case SUCCESS:
+            case FALLBACK:
                 switch (unit) {
-                    case BTC:     return String.format("(%s BTC)", new DecimalFormat("#.####").format(balance / CONVERSION_BTC));
-                    case MBTC:    return String.format("(%s mBTC)", new DecimalFormat("#.####").format(balance / CONVERSION_MBTC));
-                    case BITS:    return String.format("(%s bits)", new DecimalFormat("#.####").format(balance / CONVERSION_BITS));
-                    case SATOSHI: return String.format("(%s sat.)", new DecimalFormat("#.####").format(balance / CONVERSION_SATOSHI));
+                    case BTC:     return String.format("(%s BTC)", new DecimalFormat("#.####").format(balance / BTCUnit.CONVERSION_BTC));
+                    case MBTC:    return String.format("(%s mBTC)", new DecimalFormat("#.####").format(balance / BTCUnit.CONVERSION_MBTC));
+                    case BITS:    return String.format("(%s bits)", new DecimalFormat("#.####").format(balance / BTCUnit.CONVERSION_BITS));
+                    case SATOSHI: return String.format("(%s sat.)", new DecimalFormat("#.####").format(balance / BTCUnit.CONVERSION_SATOSHI));
                 }
 
                 Log.e("BTCBW", "WTF BTCUnit := " + unit);
                 return "?";
             case ERROR:
                 return "ERROR";
-            case PENDING:
-                return "...";
         }
 
-        Log.e("BTCBW", "WTF LastUpdateState := " + LastUpdateState);
+        Log.e("BTCBW", "WTF lastUpdateState := " + lastUpdateState);
         return "?";
+    }
+
+    public UpdateState getStatus() {
+        return lastUpdateState;
+    }
+
+    public JSONObject serialize() {
+        try {
+            JSONObject obj = new JSONObject();
+
+            obj.put("addr", address);
+            obj.put("state", lastUpdateState.getIDValue());
+            obj.put("balance", balance);
+
+            return obj;
+        } catch (JSONException e) {
+            Log.e("BTCBW", e.toString());
+            return null;
+        }
+    }
+
+    public static BitcoinAddress deserialize(JSONObject object) throws JSONException {
+        BitcoinAddress addr = new BitcoinAddress(object.getString("addr"));
+
+        addr.lastUpdateState = UpdateState.ofNumericValue(object.getInt("state"));
+        addr.balance = object.getLong("balance");
+
+        return addr;
     }
 }

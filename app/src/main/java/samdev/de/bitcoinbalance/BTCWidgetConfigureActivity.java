@@ -23,8 +23,11 @@ import java.util.Random;
 
 import samdev.de.bitcoinbalance.async.TaskListener;
 import samdev.de.bitcoinbalance.async.UpdateAddressBalanceTask;
+import samdev.de.bitcoinbalance.btc.BTCUnit;
 import samdev.de.bitcoinbalance.btc.BitcoinAddress;
 import samdev.de.bitcoinbalance.btc.BitcoinHelper;
+import samdev.de.bitcoinbalance.btc.BitcoinWallet;
+import samdev.de.bitcoinbalance.helper.PerferencesHelper;
 
 /**
  * The configuration screen for the {@link BTCWidget BTCWidget} AppWidget.
@@ -46,8 +49,6 @@ public class BTCWidgetConfigureActivity extends Activity {
             };
 
     int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
-    private static final String PREFS_NAME = "samdev.de.bitcoinbalance.BTCWidget";
-    private static final String PREF_PREFIX_KEY = "appwidget_";
 
     private RadioButton btnUnit0;
     private RadioButton btnUnit1;
@@ -171,14 +172,11 @@ public class BTCWidgetConfigureActivity extends Activity {
             final Context context = BTCWidgetConfigureActivity.this;
 
             // When the button is clicked, store the string locally
-            savePref(context, mAppWidgetId, "unit", getSelectedUnit());
-            savePref(context, mAppWidgetId, "addresses", getAddressList());
+            PerferencesHelper.savePrefWallet(context, mAppWidgetId, getWallet());
 
-            // It is the responsibility of the configuration activity to update the app widget
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             BTCWidget.updateAppWidget(context, appWidgetManager, mAppWidgetId);
 
-            // Make sure we pass back the original appWidgetId
             Intent resultValue = new Intent();
             resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
             setResult(RESULT_OK, resultValue);
@@ -195,47 +193,31 @@ public class BTCWidgetConfigureActivity extends Activity {
         }
     };
 
-    private String getSelectedUnit() {
-        if (btnUnit0.isChecked()) return "0";
-        if (btnUnit1.isChecked()) return "1";
-        if (btnUnit2.isChecked()) return "2";
-        if (btnUnit3.isChecked()) return "3";
+    private BTCUnit getSelectedUnit() {
+        if (btnUnit0.isChecked()) return BTCUnit.BTC;
+        if (btnUnit1.isChecked()) return BTCUnit.MBTC;
+        if (btnUnit2.isChecked()) return BTCUnit.BITS;
+        if (btnUnit3.isChecked()) return BTCUnit.SATOSHI;
 
-        return "-1";
+        return BTCUnit.BTC;
     }
 
-    private String getAddressList() {
-        String result = "";
-        for (int i = 0; i < addresses.size(); i++) {
-            if (i > 0) result += "|";
-            result += addresses.get(i);
+    private BitcoinWallet getWallet() {
+        BitcoinWallet wallet = new BitcoinWallet(getSelectedUnit());
+
+        for (BitcoinAddress addr: addresses) {
+            wallet.addAddress(addr);
         }
-        return result;
+
+        return wallet;
     }
 
     private void updateUI() {
-        btnFinish.setEnabled(! addresses.isEmpty());
+        btnFinish.setEnabled(!addresses.isEmpty());
 
         addressAdapter.notifyDataSetChanged();
     }
 
-    static void savePref(Context context, int appWidgetId, String name, String text) {
-        SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
-        prefs.putString(PREF_PREFIX_KEY + appWidgetId + "_" + name, text);
-        prefs.commit();
-    }
-
-    static String loadPref(Context context, int appWidgetId, String name) {
-        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
-        String value = prefs.getString(PREF_PREFIX_KEY + appWidgetId + "_" + name, null);
-
-        return value;
-    }
-
-    static void deletePref(Context context, int appWidgetId, String name) {
-        SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
-        prefs.remove(PREF_PREFIX_KEY + appWidgetId + "_" + name);
-        prefs.commit();
-    }
+    //TODO Add update every x option
 }
 

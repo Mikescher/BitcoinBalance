@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.widget.RemoteViews;
 
 import samdev.de.bitcoinbalance.btc.BTCUnit;
+import samdev.de.bitcoinbalance.btc.BitcoinWallet;
+import samdev.de.bitcoinbalance.helper.PerferencesHelper;
 
 /**
  * Implementation of App Widget functionality.
@@ -28,8 +30,7 @@ public class BTCWidget extends AppWidgetProvider {
         // When the user deletes the widget, delete the preference associated with it.
         final int N = appWidgetIds.length;
         for (int i = 0; i < N; i++) {
-            BTCWidgetConfigureActivity.deletePref(context, appWidgetIds[i], "addresses");
-            BTCWidgetConfigureActivity.deletePref(context, appWidgetIds[i], "unit");
+            BTCWidgetConfigureActivity.deletePrefWallet(context, appWidgetIds[i]);
         }
     }
 
@@ -44,18 +45,16 @@ public class BTCWidget extends AppWidgetProvider {
     }
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
-        String allAddr = BTCWidgetConfigureActivity.loadPref(context, appWidgetId, "addresses");
-        String unitValue = BTCWidgetConfigureActivity.loadPref(context, appWidgetId, "unit");
+        BitcoinWallet wallet = BitcoinWallet.deserialize(PerferencesHelper.loadPrefWallet(context, appWidgetId));
 
-        if (allAddr == null || unitValue == null) return;
-
-        BTCUnit unit = BTCUnit.ofNumericValue(unitValue);
-        String[] addresses = allAddr.split("|");
+        if (wallet == null) return;
 
         //CharSequence widgetText = BTCWidgetConfigureActivity.loadTitlePref(context, appWidgetId);
         //// Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.btcwidget);
-        //views.setTextViewText(R.id.appwidget_text, widgetText);
+
+        views.setTextViewText(R.id.appwidget_btcvalue, wallet.getFormattedBalance());
+        views.setImageViewBitmap(R.id.appwidget_btcicon, wallet.getDrawableUnitIcon());
 
         //TODO nicht exen wenn auch der btc button geklickt ist - vllt am besten nur wenn wirklich text erwisch twurde
         Intent configIntent = new Intent(context, ShowAddressActivity.class);

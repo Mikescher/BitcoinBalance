@@ -26,7 +26,7 @@
             android:text="0.40 BTC "
             android:textColor="#ffffff"
             android:textSize="30sp"
-            android:contentDescription="EXAMPLE"/>
+            android:contentDescription="bitcoin wallet balance"/>
 
     </RelativeLayout>
 
@@ -38,6 +38,7 @@
         android:shadowDy="0"
         android:layout_width="44dp"
         android:layout_height="44dp"
+        android:id="@+id/appwidget_btcicon"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:src="@drawable/symbol_btc"/>

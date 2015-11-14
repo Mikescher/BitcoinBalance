@@ -10,4 +10,8 @@ public class ShowAddressActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_address);
     }
+
+    //TODO Show QR
+    //TODO Show adress choose
+    //TODO edit  button (back to configure)
 }
