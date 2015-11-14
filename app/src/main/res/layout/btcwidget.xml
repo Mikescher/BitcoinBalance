@@ -23,10 +23,27 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical|left"
             android:textStyle="bold"
-            android:text="0.40 BTC "
+            android:text=""
             android:textColor="#ffffff"
             android:textSize="30sp"
             android:contentDescription="bitcoin wallet balance"/>
+
+        <TextView
+            android:shadowColor="#000000"
+            android:shadowRadius="16"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:layout_marginLeft="8dp"
+            android:id="@+id/appwidget_state"
+            android:singleLine="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="bottom|left"
+            android:textStyle="italic"
+            android:text=""
+            android:textColor="#ffffff"
+            android:textSize="12sp"
+            android:contentDescription="update state"/>
 
     </RelativeLayout>
 

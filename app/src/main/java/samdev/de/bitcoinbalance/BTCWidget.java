@@ -75,6 +75,7 @@ public class BTCWidget extends AppWidgetProvider {
 
         views.setTextViewText(R.id.appwidget_btcvalue, wallet.getFormattedBalance());
         views.setImageViewResource(R.id.appwidget_btcicon, wallet.getUnitIconResource());
+        views.setTextViewText(R.id.appwidget_state, wallet.getStateText());
     }
 
     private static void updateBalance(final BitcoinWallet wallet, final Context context, final int appWidgetId, final RemoteViews views) {

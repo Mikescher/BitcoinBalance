@@ -137,4 +137,14 @@ public class BitcoinWallet {
     public int getAddressCount() {
         return addresses.size();
     }
+
+    public String getStateText() {
+        if (addresses.size() == 0) return "empty wallet";
+
+        for (BitcoinAddress addr: addresses) {
+            if (addr.getStatus() == UpdateState.ERROR) return "(update error)";
+        }
+
+        return "";
+    }
 }
