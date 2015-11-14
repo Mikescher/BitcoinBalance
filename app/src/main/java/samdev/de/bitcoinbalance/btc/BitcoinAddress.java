@@ -29,7 +29,7 @@ public class BitcoinAddress {
         address = addr;
     }
 
-    public boolean UpdateValue() {
+    public boolean updateValue() {
         try {
             long v = QueryBlockchain();
             balance = v;
@@ -124,10 +124,10 @@ public class BitcoinAddress {
             case SUCCESS:
             case FALLBACK:
                 switch (unit) {
-                    case BTC:     return String.format("(%s BTC)", new DecimalFormat("#.####").format(balance / BTCUnit.CONVERSION_BTC));
-                    case MBTC:    return String.format("(%s mBTC)", new DecimalFormat("#.####").format(balance / BTCUnit.CONVERSION_MBTC));
-                    case BITS:    return String.format("(%s bits)", new DecimalFormat("#.####").format(balance / BTCUnit.CONVERSION_BITS));
-                    case SATOSHI: return String.format("(%s sat.)", new DecimalFormat("#.####").format(balance / BTCUnit.CONVERSION_SATOSHI));
+                    case BTC:     return String.format("(%s BTC)",  new DecimalFormat("#.######").format(balance / BTCUnit.CONVERSION_BTC));
+                    case MBTC:    return String.format("(%s mBTC)", new DecimalFormat("#.######").format(balance / BTCUnit.CONVERSION_MBTC));
+                    case BITS:    return String.format("(%s bits)", new DecimalFormat("#.######").format(balance / BTCUnit.CONVERSION_BITS));
+                    case SATOSHI: return String.format("(%s sat.)", new DecimalFormat("#.######").format(balance / BTCUnit.CONVERSION_SATOSHI));
                 }
 
                 Log.e("BTCBW", "WTF BTCUnit := " + unit);

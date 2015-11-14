@@ -24,7 +24,7 @@ public class UpdateAddressBalanceTask extends AsyncTask<BitcoinAddress, Integer,
 
         for (BitcoinAddress addr: params) {
             Log.d("BTCBW", String.format("[+] Update addr[%s]", addr.getFullAddress()));
-            addr.UpdateValue();
+            addr.updateValue();
             Log.d("BTCBW", String.format("[-] Update addr[%s] balance := %d", addr.getFullAddress(), addr.getBalance()));
         }
 

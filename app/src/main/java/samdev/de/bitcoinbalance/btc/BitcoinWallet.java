@@ -1,6 +1,5 @@
 package samdev.de.bitcoinbalance.btc;
 
-import android.graphics.Bitmap;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -11,6 +10,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import samdev.de.bitcoinbalance.R;
 import samdev.de.bitcoinbalance.async.UpdateState;
 
 public class BitcoinWallet {
@@ -48,10 +48,10 @@ public class BitcoinWallet {
         }
 
         switch (displayUnit) {
-            case BTC:     return new DecimalFormat("#.####").format(balance / BTCUnit.CONVERSION_BTC);
-            case MBTC:    return new DecimalFormat("#.####").format(balance / BTCUnit.CONVERSION_MBTC);
-            case BITS:    return new DecimalFormat("#.####").format(balance / BTCUnit.CONVERSION_BITS);
-            case SATOSHI: return new DecimalFormat("#.####").format(balance / BTCUnit.CONVERSION_SATOSHI);
+            case BTC:     return new DecimalFormat("#.##").format(balance / BTCUnit.CONVERSION_BTC);
+            case MBTC:    return new DecimalFormat("#.##").format(balance / BTCUnit.CONVERSION_MBTC);
+            case BITS:    return new DecimalFormat("#.##").format(balance / BTCUnit.CONVERSION_BITS);
+            case SATOSHI: return new DecimalFormat("#.##").format(balance / BTCUnit.CONVERSION_SATOSHI);
         }
 
         return "INTERN ERROR";
@@ -90,7 +90,7 @@ public class BitcoinWallet {
 
     public static BitcoinWallet deserialize(String data) {
         if (data == null) {
-            Log.w("BTCBW", "No wallet prefs found");
+            Log.w("BTCBW", "No wallet prefs found - using empty");
             return new BitcoinWallet();
         }
 
@@ -103,7 +103,7 @@ public class BitcoinWallet {
             JSONArray addrArray = obj.getJSONArray("addresses");
             for (int i = 0; i < addrArray.length(); i++) {
                 try {
-                    wallet.addAddress(BitcoinAddress.deserialize(addrArray.get(i)));
+                    wallet.addAddress(BitcoinAddress.deserialize(addrArray.getJSONObject(i)));
                 } catch (Exception e) {
                     Log.e("BTCBW", "ERROR loading address from wallet: " + e.toString());
                 }
@@ -116,7 +116,25 @@ public class BitcoinWallet {
         }
     }
 
-    public Bitmap getDrawableUnitIcon() {
+    public int getUnitIconResource() {
+        switch(displayUnit) {
+            case BTC:     return R.drawable.symbol_btc;
+            case MBTC:    return R.drawable.symbol_mbtc;
+            case BITS:    return R.drawable.symbol_ubtc;
+            case SATOSHI: return R.drawable.symbol_sbtc;
+        }
 
+        Log.e("BTCBW", "Unknwon displayUnit: " + displayUnit);
+        return -1;
+    }
+
+    public void updateValue() {
+        for (BitcoinAddress addr : addresses){
+            addr.updateValue();
+        }
+    }
+
+    public int getAddressCount() {
+        return addresses.size();
     }
 }
