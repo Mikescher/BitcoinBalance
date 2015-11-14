@@ -18,6 +18,8 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import samdev.de.bitcoinbalance.async.TaskListener;
 import samdev.de.bitcoinbalance.async.UpdateAddressBalanceTask;
@@ -28,6 +30,20 @@ import samdev.de.bitcoinbalance.btc.BitcoinHelper;
  * The configuration screen for the {@link BTCWidget BTCWidget} AppWidget.
  */
 public class BTCWidgetConfigureActivity extends Activity {
+    //TODO REMOVE ME ARGH
+    String [] EXAMPLES = new String[]
+            {
+                    "1FmvtS66LFh6ycrXDwKRQTexGJw4UWiqDX",
+                    "1JEiV9CiJmhfYhE7MzeSdmH82xRYrbYrtb",
+                    "1HceWtheh1yfeCN85GfXG84hYJjDz1JPsQ",
+                    "1NB1KFnFqnP3WSDZQrWV3pfmph5fWRyadz",
+                    "1LipeR1AjHL6gwE7WQECW4a2H4tuqm768N",
+                    "19QkqAza7BHFTuoz9N8UQkryP4E9jHo4N3",
+                    "1Kz25jm6pjNTaz8bFezEYUeBYfEtpjuKRG",
+                    "15KXVQv7UGtUoTe5VNWXT1bMz46MXuePba",
+                    "1VESCU4YLvNYhmTsJRgFKKn3bLFeeWtJm",
+                    "1BitPoPevGTcnSGWqHGrFiVg6fVC7y9NVK"
+            };
 
     int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
     private static final String PREFS_NAME = "samdev.de.bitcoinbalance.BTCWidget";
@@ -95,7 +111,8 @@ public class BTCWidgetConfigureActivity extends Activity {
 
             final EditText input = new EditText(context);
             input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
-            input.setText("1JEiV9CiJmhfYhE7MzeSdmH82xRYrbYrtb"); //TODO REMOVE ME ARGH
+
+            input.setText(EXAMPLES[new Random().nextInt(EXAMPLES.length)]); //TODO 4 debug only --rem--
             builder.setView(input);
 
             builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {

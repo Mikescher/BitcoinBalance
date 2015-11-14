@@ -8,5 +8,5 @@ import java.util.List;
 public class BitcoinWallet {
     public List<BitcoinAddress> addresses;
 
-
+    //TODO Serialize and deserialize (4 prefs)
 }

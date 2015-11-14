@@ -20,10 +20,12 @@ public class UpdateAddressBalanceTask extends AsyncTask<BitcoinAddress, Integer,
     @Override
     protected Boolean doInBackground(BitcoinAddress... params) {
 
-        for (BitcoinAddress addr: params) {
-            boolean result = addr.UpdateValue();
+        Log.d("BTCBW", String.format("[+] Update %d addresses", params.length));
 
-            Log.d("BTCBW", String.format("Updated addr value:%d = %s", addr.balance, result));
+        for (BitcoinAddress addr: params) {
+            Log.d("BTCBW", String.format("[+] Update addr[%s]", addr.getFullAddress()));
+            addr.UpdateValue();
+            Log.d("BTCBW", String.format("[-] Update addr[%s] balance := %d", addr.getFullAddress(), addr.getBalance()));
         }
 
         return true;

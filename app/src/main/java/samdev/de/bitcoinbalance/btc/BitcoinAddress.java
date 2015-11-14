@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.text.DecimalFormat;
 
+import samdev.de.bitcoinbalance.async.UpdateState;
 import samdev.de.bitcoinbalance.helper.NetworkHelper;
 
 public class BitcoinAddress {
@@ -22,18 +23,23 @@ public class BitcoinAddress {
     private final static double CONVERSION_BITS    = 100;
     private final static double CONVERSION_SATOSHI = 1;
 
-    public final String address;
+    private final String address;
 
-    public long balance = -1;
+    private long balance = -1;
+
+    private UpdateState LastUpdateState = UpdateState.INITIAL;
 
     public BitcoinAddress(String addr) {
         address = addr;
     }
 
     public boolean UpdateValue() {
+        LastUpdateState = UpdateState.PENDING;
+
         try {
             long v = QueryBlockchain();
             balance = v;
+            LastUpdateState = UpdateState.SUCCESS;
             return true;
         } catch (Exception e) {
             Log.w("BTCBW", "Site not reachable: blockchain.info");
@@ -42,31 +48,35 @@ public class BitcoinAddress {
         try {
             long v = QueryBlockexplorer();
             balance = v;
+            LastUpdateState = UpdateState.SUCCESS;
             return true;
         } catch (Exception e) {
-            Log.w("BTCBW", "Site not reachable: blockchain.info");
+            Log.w("BTCBW", "Site not reachable: blockexplorer.com");
         }
 
         try {
             long v = QueryToshi();
             balance = v;
+            LastUpdateState = UpdateState.SUCCESS;
             return true;
         } catch (Exception e) {
-            Log.w("BTCBW", "Site not reachable: blockchain.info");
+            Log.w("BTCBW", "Site not reachable: toshi.io");
         }
 
         try {
             long v = QueryBlockcypher();
             balance = v;
+            LastUpdateState = UpdateState.SUCCESS;
             return true;
         } catch (Exception e) {
-            Log.w("BTCBW", "Site not reachable: blockchain.info");
+            Log.w("BTCBW", "Site not reachable: blockcypher.com");
         }
 
+        LastUpdateState = UpdateState.ERROR;
         return false;
     }
 
-    private long QueryBlockchain() throws IOException {
+    private long QueryBlockchain() throws IOException, NumberFormatException {
         String content = NetworkHelper.GetHttpContent(String.format(URL_BLOCKCHAIN, address));
 
         long value = Long.parseLong(content);
@@ -76,7 +86,7 @@ public class BitcoinAddress {
         return value;
     }
 
-    private long QueryBlockexplorer() throws IOException {
+    private long QueryBlockexplorer() throws IOException, NumberFormatException {
         String content = NetworkHelper.GetHttpContent(String.format(URL_BLOCKEXPLORER, address));
 
         long value = Long.parseLong(content);
@@ -86,40 +96,51 @@ public class BitcoinAddress {
         return value;
     }
 
-    private long QueryToshi() throws JSONException, IOException {
+    private long QueryToshi() throws JSONException, IOException, NumberFormatException {
         String content = NetworkHelper.GetHttpContent(String.format(URL_TOSHI, address));
         JSONObject obj = new JSONObject(content);
 
         return obj.getLong("balance");
     }
 
-    private long QueryBlockcypher() throws JSONException, IOException {
+    private long QueryBlockcypher() throws JSONException, IOException, NumberFormatException {
         String content = NetworkHelper.GetHttpContent(String.format(URL_BLOCKCYPHER, address));
         JSONObject obj = new JSONObject(content);
 
         return obj.getLong("balance");
     }
 
-    public String getShortAddress() {
-        return address.substring(0, 8) + " ... " + address.substring(address.length() - 4);
+    public String getFullAddress() {
+        return address;
     }
 
-
-    public boolean isBalanceSet() {
-        return balance >= 0;
+    public long getBalance() {
+        return balance;
     }
 
     public String getFormattedBalance(BTCUnit unit) {
-        switch (unit) {
 
-            case BTC:     return new DecimalFormat("#.####").format(balance / CONVERSION_BTC)     + " BTC";
-            case MBTC:    return new DecimalFormat("#.####").format(balance / CONVERSION_MBTC)    + " mBTC";
-            case BITS:    return new DecimalFormat("#.####").format(balance / CONVERSION_BITS)    + " bits";
-            case SATOSHI: return new DecimalFormat("#.####").format(balance / CONVERSION_SATOSHI) + " sat.";
+        switch (LastUpdateState) {
+
+            case INITIAL:
+                return "";
+            case SUCCESS:
+                switch (unit) {
+                    case BTC:     return String.format("(%s BTC)", new DecimalFormat("#.####").format(balance / CONVERSION_BTC));
+                    case MBTC:    return String.format("(%s mBTC)", new DecimalFormat("#.####").format(balance / CONVERSION_MBTC));
+                    case BITS:    return String.format("(%s bits)", new DecimalFormat("#.####").format(balance / CONVERSION_BITS));
+                    case SATOSHI: return String.format("(%s sat.)", new DecimalFormat("#.####").format(balance / CONVERSION_SATOSHI));
+                }
+
+                Log.e("BTCBW", "WTF BTCUnit := " + unit);
+                return "?";
+            case ERROR:
+                return "ERROR";
+            case PENDING:
+                return "...";
         }
 
-        Log.e("BTCBW", "WTF BTCUnit := " + unit);
-
+        Log.e("BTCBW", "WTF LastUpdateState := " + LastUpdateState);
         return "?";
     }
 }

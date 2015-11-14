@@ -51,13 +51,9 @@ public class AddressListAdapter extends BaseAdapter implements ListAdapter {
         TextView listItemText2 = (TextView)view.findViewById(R.id.list_item_string2);
 
         BitcoinAddress btcaddr = list.get(position);
-        listItemText.setText(btcaddr.getShortAddress());
+        listItemText.setText(btcaddr.getFullAddress());
 
-        if (btcaddr.isBalanceSet()) {
-            listItemText2.setText(String.format("(%s)", btcaddr.getFormattedBalance(BTCUnit.BTC)));
-        } else {
-            listItemText2.setText("");
-        }
+        listItemText2.setText(btcaddr.getFormattedBalance(BTCUnit.BTC));
 
         ImageButton deleteBtn = (ImageButton)view.findViewById(R.id.delete_btn);
         ImageButton topBtn = (ImageButton)view.findViewById(R.id.top_btn);
