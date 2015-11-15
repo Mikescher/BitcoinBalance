@@ -102,7 +102,7 @@ public class BTCWidget extends AppWidgetProvider {
             views.setTextViewText(R.id.appwidget_state, wallet.getStateText());
         }
 
-        views.setImageViewResource(R.id.appwidget_btcicon, wallet.getUnitIconResource());
+        views.setImageViewResource(R.id.appwidget_btcicon, wallet.getUnit().getUnitIconResource());
     }
 
     private static void updateBalance(final BitcoinWallet wallet, final Context context, final int appWidgetId, final RemoteViews views) {

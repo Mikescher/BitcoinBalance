@@ -2,6 +2,8 @@ package samdev.de.bitcoinbalance.btc;
 
 import android.util.Log;
 
+import samdev.de.bitcoinbalance.R;
+
 public enum BTCUnit {
     BTC(0),
     MBTC(1),
@@ -38,6 +40,32 @@ public enum BTCUnit {
 
         Log.e("BTCBW", "ofNumericValue parse error: " + unit);
         return BTC;
+    }
+
+
+
+    public int getUnitIconResource() {
+        switch(this) {
+            case BTC:     return R.drawable.symbol_btc;
+            case MBTC:    return R.drawable.symbol_mbtc;
+            case BITS:    return R.drawable.symbol_ubtc;
+            case SATOSHI: return R.drawable.symbol_sbtc;
+        }
+
+        Log.e("BTCBW", "Unknwon displayUnit: " + this);
+        return -1;
+    }
+
+    public double getConversionFactor() {
+        switch (this) {
+            case BTC:     return CONVERSION_BTC;
+            case MBTC:    return CONVERSION_MBTC;
+            case BITS:    return CONVERSION_BITS;
+            case SATOSHI: return CONVERSION_SATOSHI;
+        }
+
+        Log.e("BTCBW", "Unknwon displayUnit: " + this);
+        return 1;
     }
 
     public int getIDValue() {

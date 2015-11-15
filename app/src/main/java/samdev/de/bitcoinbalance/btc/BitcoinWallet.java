@@ -47,14 +47,13 @@ public class BitcoinWallet {
                 balance += addr.getBalance();
         }
 
-        switch (displayUnit) {
-            case BTC:     return new DecimalFormat("#.##").format(balance / BTCUnit.CONVERSION_BTC);
-            case MBTC:    return new DecimalFormat("#.##").format(balance / BTCUnit.CONVERSION_MBTC);
-            case BITS:    return new DecimalFormat("#.##").format(balance / BTCUnit.CONVERSION_BITS);
-            case SATOSHI: return new DecimalFormat("#.##").format(balance / BTCUnit.CONVERSION_SATOSHI);
-        }
+        return formatLengthSensitive(balance / displayUnit.getConversionFactor());
+    }
 
-        return "INTERN ERROR";
+    private String formatLengthSensitive(double v) {
+        if ((int)v == 0) return new DecimalFormat("#.####").format(v);
+
+        return new DecimalFormat("#.##").format(v);
     }
 
     public BTCUnit getUnit() {
@@ -114,18 +113,6 @@ public class BitcoinWallet {
             Log.e("BTCBW", "ERROR loading wallet: " + e.toString());
             return new BitcoinWallet();
         }
-    }
-
-    public int getUnitIconResource() {
-        switch(displayUnit) {
-            case BTC:     return R.drawable.symbol_btc;
-            case MBTC:    return R.drawable.symbol_mbtc;
-            case BITS:    return R.drawable.symbol_ubtc;
-            case SATOSHI: return R.drawable.symbol_sbtc;
-        }
-
-        Log.e("BTCBW", "Unknwon displayUnit: " + displayUnit);
-        return -1;
     }
 
     public void updateValue() {

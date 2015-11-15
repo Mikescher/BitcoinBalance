@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -80,6 +81,13 @@ public class BTCWidgetConfigureActivity extends Activity {
         addressAdapter = new AddressListAdapter(addresses, this);
         addressView.setAdapter(addressAdapter);
 
+        addressAdapter.registerDataSetObserver(new DataSetObserver() {
+            @Override
+            public void onChanged() {
+                btnFinish.setEnabled(!addresses.isEmpty());
+            }
+        });
+
         findViewById(R.id.btnAddressAddManual).setOnClickListener(mOnAddAdressManual);
         findViewById(R.id.btnAddressAddQR).setOnClickListener(mOnAddAdressQR);
         findViewById(R.id.btnAdd).setOnClickListener(mOnFinish);
@@ -98,7 +106,7 @@ public class BTCWidgetConfigureActivity extends Activity {
             return;
         }
 
-        updateUI();
+        addressAdapter.notifyDataSetChanged();
     }
 
     View.OnClickListener mOnAddAdressManual = new View.OnClickListener() {
@@ -123,7 +131,8 @@ public class BTCWidgetConfigureActivity extends Activity {
                     } else {
                         Toast.makeText(context, "Invalid Bitcoin adress" , Toast.LENGTH_LONG).show();
                     }
-                    updateUI();
+
+                    addressAdapter.notifyDataSetChanged();
                 }
             });
             builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -206,12 +215,6 @@ public class BTCWidgetConfigureActivity extends Activity {
         }
 
         return wallet;
-    }
-
-    private void updateUI() {
-        btnFinish.setEnabled(!addresses.isEmpty());
-
-        addressAdapter.notifyDataSetChanged();
     }
 
     //TODO Add update every x option
