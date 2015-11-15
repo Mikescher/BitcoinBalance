@@ -125,6 +125,10 @@ public class BitcoinWallet {
         return addresses.size();
     }
 
+    public boolean hasMainAddress() {
+        return addresses.size() > 0;
+    }
+
     public String getStateText() {
         if (addresses.size() == 0) return "empty wallet";
 

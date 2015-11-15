@@ -1,0 +1,5 @@
+<resources>
+    <declare-styleable name="QRCodeView">
+        <attr name="master" format="string" />
+    </declare-styleable>
+</resources>

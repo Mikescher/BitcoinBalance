@@ -61,17 +61,17 @@ public class BTCWidget extends AppWidgetProvider {
     private static RemoteViews initClickListener(Context context, int appWidgetId, RemoteViews views) {
         Log.d("BTCBW", String.format("initClickListener(%d)", appWidgetId));
 
-        {
-            Intent showAddressIntent = new Intent(context, ShowAddressActivity.class);
-            showAddressIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-            PendingIntent showAddressPendingIntent = PendingIntent.getActivity(context, appWidgetId, showAddressIntent, 0);
-            views.setOnClickPendingIntent(R.id.appwidget_btcvalue, showAddressPendingIntent);
-            showAddressIntent.setAction(ShowAddressActivity.class.toString() + Integer.toString(appWidgetId));
-        }
+        // Balance Textbox
 
-        {
-            views.setOnClickPendingIntent(R.id.appwidget_btcicon, getPendingSelfIntent(context, appWidgetId, ACTION_UPDATE + appWidgetId));
-        }
+        Intent showAddressIntent = new Intent(context, ShowAddressActivity.class);
+        showAddressIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        PendingIntent showAddressPendingIntent = PendingIntent.getActivity(context, appWidgetId, showAddressIntent, 0);
+        views.setOnClickPendingIntent(R.id.appwidget_btcvalue, showAddressPendingIntent);
+        showAddressIntent.setAction(ShowAddressActivity.class.toString() + Integer.toString(appWidgetId));
+
+        // BTC Icon
+
+        views.setOnClickPendingIntent(R.id.appwidget_btcicon, getPendingSelfIntent(context, appWidgetId, ACTION_UPDATE + appWidgetId));
 
         return views;
     }

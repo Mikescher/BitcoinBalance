@@ -18,12 +18,12 @@
                 android:resource="@xml/btcwidget_info" />
         </receiver>
 
-        <activity android:name=".BTCWidgetConfigureActivity" >
+        <activity android:name=".BTCWidgetConfigureActivity" android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
-        <activity android:name=".ShowAddressActivity" >
+        <activity android:name=".ShowAddressActivity" android:screenOrientation="portrait" >
         </activity>
     </application>
 

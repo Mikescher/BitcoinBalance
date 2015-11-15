@@ -23,4 +23,10 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.0'
+
+    //######## ZXING ########
+
+
+    compile 'com.journeyapps:zxing-android-embedded:3.0.3@aar'
+    compile 'com.google.zxing:core:3.2.1'
 }

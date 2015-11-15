@@ -163,4 +163,8 @@ public class BitcoinAddress {
 
         return addr;
     }
+
+    public String getBIP21Address() {
+        return String.format("bitcoin:%s", getFullAddress());
+    }
 }
