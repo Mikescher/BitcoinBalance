@@ -73,5 +73,4 @@ public class ShowAddressActivity extends AppCompatActivity {
     }
 
     //TODO edit  button (back to configure)
-    //TODO scroll addresses in addresslist (ticker-like)
 }
