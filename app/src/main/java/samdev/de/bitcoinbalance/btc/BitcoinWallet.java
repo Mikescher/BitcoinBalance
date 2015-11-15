@@ -10,7 +10,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import samdev.de.bitcoinbalance.R;
 import samdev.de.bitcoinbalance.async.UpdateState;
 
 public class BitcoinWallet {
@@ -37,7 +36,7 @@ public class BitcoinWallet {
     }
 
     public String getFormattedBalance() {
-        if (addresses.size() == 0) return "EMPTY";
+        if (addresses.isEmpty()) return "EMPTY";
 
         long balance = 0;
 
@@ -61,7 +60,7 @@ public class BitcoinWallet {
     }
 
     public BitcoinAddress getMainAddress() {
-        return (addresses.size() > 0) ? addresses.get(0) : null;
+        return (addresses.isEmpty()) ? null : addresses.get(0);
     }
 
     public void addAddress(BitcoinAddress addr) {
@@ -126,11 +125,11 @@ public class BitcoinWallet {
     }
 
     public boolean hasMainAddress() {
-        return addresses.size() > 0;
+        return ! addresses.isEmpty();
     }
 
     public String getStateText() {
-        if (addresses.size() == 0) return "empty wallet";
+        if (addresses.isEmpty()) return "empty wallet";
 
         for (BitcoinAddress addr: addresses) {
             if (addr.getStatus() == UpdateState.ERROR) return "(update error)";

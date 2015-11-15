@@ -33,7 +33,6 @@ public class UpdateWalletBalanceTask extends AsyncTask<BitcoinWallet, Integer, B
         }
 
         while (System.currentTimeMillis() - start < minimumExecutionTime) {
-            Log.d("BTCBW", "UpdateWalletBalanceTask - Trickery sleeping");
             try { Thread.sleep(100); } catch (InterruptedException e) { /**/ }
         }
 
