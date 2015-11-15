@@ -15,5 +15,11 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/showaddr_qrview" />
-    
+
+    <ListView
+        android:layout_below="@+id/showaddr_qrview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/showaddr_addresslist" />
+
 </RelativeLayout>

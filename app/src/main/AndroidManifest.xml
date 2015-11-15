@@ -23,7 +23,10 @@
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
-        <activity android:name=".ShowAddressActivity" android:screenOrientation="portrait" >
+        <activity
+            android:theme="@style/AppTheme.NoActionBar"
+            android:name=".ShowAddressActivity"
+            android:screenOrientation="portrait" >
         </activity>
     </application>
 

@@ -138,4 +138,12 @@ public class BitcoinWallet {
 
         return "";
     }
+
+    public ArrayList<BitcoinAddress> getAddresses() {
+        return new ArrayList<>(addresses);
+    }
+
+    public BitcoinAddress getAddress(int position) {
+        return addresses.get(position);
+    }
 }

@@ -6,15 +6,16 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/addrlistitemsmall_top_btn"
         android:layout_alignParentLeft="true"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/addrlistitemsmall_list_item_string"
-            android:ellipsize="end"
+            android:id="@+id/addrlistitembig_list_item_string"
+            android:ellipsize="marquee"
             android:singleLine="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="8dp"
@@ -22,7 +23,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/addrlistitemsmall_list_item_string2"
+            android:id="@+id/addrlistitembig_list_item_string2"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="8dp"
@@ -30,25 +31,5 @@
             android:textStyle="italic" />
 
     </LinearLayout>
-
-    <ImageButton
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:id="@+id/addrlistitemsmall_top_btn"
-        android:layout_toLeftOf="@+id/addrlistitemsmall_delete_btn"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="0dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/up" />
-
-    <ImageButton
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:id="@+id/addrlistitemsmall_delete_btn"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="5dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/delete" />
 
 </RelativeLayout>
