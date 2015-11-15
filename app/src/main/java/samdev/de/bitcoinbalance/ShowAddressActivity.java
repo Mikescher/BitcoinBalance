@@ -73,6 +73,5 @@ public class ShowAddressActivity extends AppCompatActivity {
     }
 
     //TODO edit  button (back to configure)
-    //TODO initial QR animation + QR Change animation (code in QRCodeView.java)
     //TODO scroll addresses in addresslist (ticker-like)
 }

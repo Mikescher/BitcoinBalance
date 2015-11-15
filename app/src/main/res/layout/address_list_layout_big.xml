@@ -10,12 +10,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
 
-        <TextView
+        <samdev.de.bitcoinbalance.views.MarqueeTextView
             android:id="@+id/addrlistitembig_list_item_string"
-            android:ellipsize="marquee"
-            android:singleLine="true"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:scrollHorizontally="true"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="8dp"

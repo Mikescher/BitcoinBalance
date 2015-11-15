@@ -137,3 +137,4 @@ public class BTCWidget extends AppWidgetProvider {
     }
 }
 
+//TODO new and _IMPROVED_ logo
