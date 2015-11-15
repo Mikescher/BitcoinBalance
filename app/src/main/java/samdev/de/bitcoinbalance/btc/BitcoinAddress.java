@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
+import java.net.URI;
 import java.text.DecimalFormat;
 
 import samdev.de.bitcoinbalance.async.UpdateState;
@@ -166,5 +167,14 @@ public class BitcoinAddress {
 
     public String getBIP21Address() {
         return String.format("bitcoin:%s", getFullAddress());
+    }
+
+    public static BitcoinAddress parse(String contents) {
+        if (contents.toLowerCase().startsWith("bitcoin:")) contents = contents.substring("bitcoin:".length());
+        if (contents.contains("?")) contents = contents.substring(0, contents.indexOf('?'));
+
+        if (BitcoinHelper.ValidateBitcoinAddress(contents)) return new BitcoinAddress(contents);
+
+        return null;
     }
 }

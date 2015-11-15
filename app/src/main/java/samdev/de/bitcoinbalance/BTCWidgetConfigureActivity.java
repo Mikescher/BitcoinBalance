@@ -17,7 +17,11 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 import samdev.de.bitcoinbalance.async.TaskListener;
@@ -54,7 +58,6 @@ public class BTCWidgetConfigureActivity extends Activity {
     private RadioButton btnUnit2;
     private RadioButton btnUnit3;
     private Button btnFinish;
-    private ListView addressView;
 
     private AddressListAdapter addressAdapter;
     private ArrayList<BitcoinAddress> addresses = new ArrayList<>();
@@ -71,12 +74,13 @@ public class BTCWidgetConfigureActivity extends Activity {
 
         setContentView(R.layout.btcwidget_configure);
 
+        ListView addressView = (ListView) findViewById(R.id.adressesList);
+
         btnUnit0    = (RadioButton) findViewById(R.id.rbUnit0);
         btnUnit1    = (RadioButton) findViewById(R.id.rbUnit1);
         btnUnit2    = (RadioButton) findViewById(R.id.rbUnit2);
         btnUnit3    = (RadioButton) findViewById(R.id.rbUnit3);
         btnFinish   = (Button) findViewById(R.id.btnAdd);
-        addressView = (ListView) findViewById(R.id.adressesList);
 
         addressAdapter = new AddressListAdapter(addresses, this);
         addressView.setAdapter(addressAdapter);
@@ -93,14 +97,12 @@ public class BTCWidgetConfigureActivity extends Activity {
         findViewById(R.id.btnAdd).setOnClickListener(mOnFinish);
         findViewById(R.id.btnAbort).setOnClickListener(mOnAbort);
 
-        // Find the widget id from the intent.
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         if (extras != null) {
             mAppWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
         }
 
-        // If this activity was started with an intent without an app widget ID, finish with an error.
         if (mAppWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
             finish();
             return;
@@ -147,9 +149,12 @@ public class BTCWidgetConfigureActivity extends Activity {
     };
 
     private void AddNewAddress(String addr) {
-        Log.d("BTCBW", "Add address: " + addr);
+        AddNewAddress(new BitcoinAddress(addr));
+    }
 
-        BitcoinAddress new_address = new BitcoinAddress(addr);
+    private void AddNewAddress(BitcoinAddress new_address) {
+        Log.d("BTCBW", "Add address: " + new_address.getFullAddress());
+
         addresses.add(new_address);
 
         new UpdateAddressBalanceTask(new TaskListener() {
@@ -168,9 +173,15 @@ public class BTCWidgetConfigureActivity extends Activity {
 
     View.OnClickListener mOnAddAdressQR = new View.OnClickListener() {
         public void onClick(View v) {
-            final Context context = BTCWidgetConfigureActivity.this;
+            IntentIntegrator scanner = new IntentIntegrator(BTCWidgetConfigureActivity.this);
 
-            //TODO qr reader
+            scanner.setBeepEnabled(false);
+            scanner.setDesiredBarcodeFormats(Collections.singletonList("QR_CODE"));
+            scanner.setOrientationLocked(true);
+            scanner.setPrompt("Scan yout bitcoin address QR code");
+            scanner.setCaptureActivity(PortraitCaptureActivity.class);
+
+            scanner.initiateScan();
         }
     };
 
@@ -178,7 +189,6 @@ public class BTCWidgetConfigureActivity extends Activity {
         public void onClick(View v) {
             final Context context = BTCWidgetConfigureActivity.this;
 
-            // When the button is clicked, store the string locally
             PreferencesHelper.savePrefWallet(context, mAppWidgetId, getWallet());
 
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
@@ -197,6 +207,18 @@ public class BTCWidgetConfigureActivity extends Activity {
             finish();
         }
     };
+
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+
+        BitcoinAddress addr = BitcoinAddress.parse(scanningResult.getContents());
+
+        if (addr != null) {
+            AddNewAddress(addr);
+        } else {
+            Toast.makeText(getApplicationContext(), "This is not a valid bitcoin address", Toast.LENGTH_LONG).show();
+        }
+    }
 
     private BTCUnit getSelectedUnit() {
         if (btnUnit0.isChecked()) return BTCUnit.BTC;
