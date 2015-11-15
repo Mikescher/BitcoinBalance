@@ -14,7 +14,8 @@ public class BitcoinHelper {
 
         byte[] hash = Sha256(decoded, 0, 21, 2);
 
-        return Arrays.equals(Arrays.copyOfRange(hash, 0, 4), Arrays.copyOfRange(decoded, 21, 25));
+        return hash != null && Arrays.equals(Arrays.copyOfRange(hash, 0, 4), Arrays.copyOfRange(decoded, 21, 25));
+
     }
 
     private static byte[] DecodeBase58(String input, int base, int len) {

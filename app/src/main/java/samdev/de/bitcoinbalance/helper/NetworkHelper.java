@@ -16,7 +16,8 @@ public final class NetworkHelper {
         try {
             urlConnection = (HttpURLConnection) new URL(url).openConnection();
 
-            InputStream in = new BufferedInputStream(urlConnection.getInputStream()); //TODO Sometimes the whole thread quit on getInputStream (without Exception or error)
+            //TODO Sometimes the whole thread quit on getInputStream (without Exception or error)
+            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 

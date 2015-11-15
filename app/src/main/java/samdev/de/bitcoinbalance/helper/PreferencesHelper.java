@@ -5,14 +5,14 @@ import android.content.SharedPreferences;
 
 import samdev.de.bitcoinbalance.btc.BitcoinWallet;
 
-public final class PerferencesHelper {
+public final class PreferencesHelper {
     private static final String PREFS_NAME = "samdev.de.bitcoinbalance.BTCWidget";
     private static final String PREF_PREFIX_KEY = "appwidget_";
 
     public static void savePrefWallet(Context context, int appWidgetId, BitcoinWallet wallet) {
         SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
         prefs.putString(PREF_PREFIX_KEY + appWidgetId + "_" + "wallet", wallet.serialize());
-        prefs.commit();
+        prefs.apply();
     }
 
     public static BitcoinWallet loadPrefWallet(Context context, int appWidgetId) {
@@ -25,6 +25,6 @@ public final class PerferencesHelper {
     public static void deletePrefWallet(Context context, int appWidgetId) {
         SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
         prefs.remove(PREF_PREFIX_KEY + appWidgetId + "_" + "wallet");
-        prefs.commit();
+        prefs.apply();
     }
 }

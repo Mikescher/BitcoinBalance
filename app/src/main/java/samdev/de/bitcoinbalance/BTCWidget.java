@@ -5,36 +5,33 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.RemoteViews;
 
+
 import samdev.de.bitcoinbalance.async.TaskListener;
-import samdev.de.bitcoinbalance.async.UpdateAddressBalanceTask;
 import samdev.de.bitcoinbalance.async.UpdateWalletBalanceTask;
-import samdev.de.bitcoinbalance.btc.BTCUnit;
 import samdev.de.bitcoinbalance.btc.BitcoinWallet;
-import samdev.de.bitcoinbalance.helper.PerferencesHelper;
+import samdev.de.bitcoinbalance.helper.PreferencesHelper;
 
 /**
  * Implementation of App Widget functionality.
  * App Widget Configuration implemented in {@link BTCWidgetConfigureActivity BTCWidgetConfigureActivity}
  */
 public class BTCWidget extends AppWidgetProvider {
+    private final static String ACTION_UPDATE = "BTCBW_UPDATE_";
+
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        final int N = appWidgetIds.length;
-        for (int i = 0; i < N; i++) {
-            updateAppWidget(context, appWidgetManager, appWidgetIds[i]);
+        for (int appWidgetId : appWidgetIds) {
+            updateAppWidget(context, appWidgetManager, appWidgetId);
         }
     }
 
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
-        final int N = appWidgetIds.length;
-        for (int i = 0; i < N; i++) {
-            PerferencesHelper.deletePrefWallet(context, appWidgetIds[i]);
+        for (int appWidgetId : appWidgetIds) {
+            PreferencesHelper.deletePrefWallet(context, appWidgetId);
         }
     }
 
@@ -49,30 +46,58 @@ public class BTCWidget extends AppWidgetProvider {
     }
 
     public static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.btcwidget);
-        BitcoinWallet wallet = PerferencesHelper.loadPrefWallet(context, appWidgetId);
+        Log.d("BTCBW", String.format("updateAppWidget(%d)", appWidgetId));
 
-        updateDisplay(wallet, context, appWidgetId, views);
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.btcwidget);
+        BitcoinWallet wallet = PreferencesHelper.loadPrefWallet(context, appWidgetId);
+
+        updateDisplay(wallet, views);
         initClickListener(context, appWidgetId, views);
         updateBalance(wallet, context, appWidgetId, views);
 
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
-    @NonNull
     private static RemoteViews initClickListener(Context context, int appWidgetId, RemoteViews views) {
-        //TODO nicht exen wenn auch der btc button geklickt ist - vllt am besten nur wenn wirklich text erwisch twurde
-        Intent configIntent = new Intent(context, ShowAddressActivity.class);
-        configIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        PendingIntent configPendingIntent = PendingIntent.getActivity(context, appWidgetId, configIntent, 0);
-        views.setOnClickPendingIntent(R.id.appwidget_btcvalue, configPendingIntent);
-        configIntent.setAction(ShowAddressActivity.class.toString() + Integer.toString(appWidgetId));
+        Log.d("BTCBW", String.format("initClickListener(%d)", appWidgetId));
+
+        {
+            Intent showAddressIntent = new Intent(context, ShowAddressActivity.class);
+            showAddressIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+            PendingIntent showAddressPendingIntent = PendingIntent.getActivity(context, appWidgetId, showAddressIntent, 0);
+            views.setOnClickPendingIntent(R.id.appwidget_btcvalue, showAddressPendingIntent);
+            showAddressIntent.setAction(ShowAddressActivity.class.toString() + Integer.toString(appWidgetId));
+        }
+
+        {
+            views.setOnClickPendingIntent(R.id.appwidget_btcicon, getPendingSelfIntent(context, appWidgetId, ACTION_UPDATE + appWidgetId));
+        }
 
         return views;
     }
 
-    private static void updateDisplay(BitcoinWallet wallet, Context context, int appWidgetId, RemoteViews views) {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        super.onReceive(context, intent);
 
+        if (intent.getAction().startsWith(ACTION_UPDATE)) {
+
+            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.btcwidget);
+            int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
+
+            Log.d("BTCBW", String.format("onRecieve(ACTION_UPDATE, %d)", appWidgetId));
+
+            BitcoinWallet wallet = PreferencesHelper.loadPrefWallet(context, appWidgetId);
+
+            updateDisplay(wallet, views);
+
+            appWidgetManager.updateAppWidget(appWidgetId, views);
+        }
+    }
+
+    // Needs appWidgetManager.updateAppWidget after call
+    private static void updateDisplay(BitcoinWallet wallet, RemoteViews views) {
         views.setTextViewText(R.id.appwidget_btcvalue, wallet.getFormattedBalance());
         views.setImageViewResource(R.id.appwidget_btcicon, wallet.getUnitIconResource());
         views.setTextViewText(R.id.appwidget_state, wallet.getStateText());
@@ -88,9 +113,17 @@ public class BTCWidget extends AppWidgetProvider {
             @Override
             public void onTaskFinished() {
                 Log.d("BTCBW", "Update Wallet finished");
-                updateDisplay(wallet, context, appWidgetId, views);
+                updateDisplay(wallet, views);
+                PreferencesHelper.savePrefWallet(context, appWidgetId, wallet);
             }
         }).execute(wallet);
+    }
+
+    private static PendingIntent getPendingSelfIntent(Context context, int appWidgetId, String action) {
+        Intent intent = new Intent(context, BTCWidget.class);
+        intent.setAction(action);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        return PendingIntent.getBroadcast(context, 0, intent, 0);
     }
 }
 

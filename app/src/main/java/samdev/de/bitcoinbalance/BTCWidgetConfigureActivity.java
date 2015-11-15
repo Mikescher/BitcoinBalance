@@ -6,7 +6,6 @@ import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -18,7 +17,6 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import samdev.de.bitcoinbalance.async.TaskListener;
@@ -27,7 +25,7 @@ import samdev.de.bitcoinbalance.btc.BTCUnit;
 import samdev.de.bitcoinbalance.btc.BitcoinAddress;
 import samdev.de.bitcoinbalance.btc.BitcoinHelper;
 import samdev.de.bitcoinbalance.btc.BitcoinWallet;
-import samdev.de.bitcoinbalance.helper.PerferencesHelper;
+import samdev.de.bitcoinbalance.helper.PreferencesHelper;
 
 /**
  * The configuration screen for the {@link BTCWidget BTCWidget} AppWidget.
@@ -172,7 +170,7 @@ public class BTCWidgetConfigureActivity extends Activity {
             final Context context = BTCWidgetConfigureActivity.this;
 
             // When the button is clicked, store the string locally
-            PerferencesHelper.savePrefWallet(context, mAppWidgetId, getWallet());
+            PreferencesHelper.savePrefWallet(context, mAppWidgetId, getWallet());
 
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             BTCWidget.updateAppWidget(context, appWidgetManager, mAppWidgetId);
@@ -186,8 +184,6 @@ public class BTCWidgetConfigureActivity extends Activity {
 
     View.OnClickListener mOnAbort = new View.OnClickListener() {
         public void onClick(View v) {
-            final Context context = BTCWidgetConfigureActivity.this;
-
             setResult(RESULT_CANCELED);
             finish();
         }

@@ -14,6 +14,7 @@ public enum UpdateState {
         this.value = numVal;
     }
 
+    @SuppressWarnings("unused")
     public static UpdateState ofNumericValue(String unit) {
         if (unit.equals("" + INITIAL.value))  return INITIAL;
         if (unit.equals("" + SUCCESS.value))  return SUCCESS;

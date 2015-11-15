@@ -31,8 +31,7 @@ public class BitcoinAddress {
 
     public boolean updateValue() {
         try {
-            long v = QueryBlockchain();
-            balance = v;
+            balance = QueryBlockchain();
             lastUpdateState = UpdateState.SUCCESS;
             return true;
         } catch (Exception e) {
@@ -40,8 +39,7 @@ public class BitcoinAddress {
         }
 
         try {
-            long v = QueryBlockexplorer();
-            balance = v;
+            balance = QueryBlockexplorer();
             lastUpdateState = UpdateState.SUCCESS;
             return true;
         } catch (Exception e) {
@@ -49,8 +47,7 @@ public class BitcoinAddress {
         }
 
         try {
-            long v = QueryToshi();
-            balance = v;
+            balance = QueryToshi();
             lastUpdateState = UpdateState.SUCCESS;
             return true;
         } catch (Exception e) {
@@ -58,8 +55,7 @@ public class BitcoinAddress {
         }
 
         try {
-            long v = QueryBlockcypher();
-            balance = v;
+            balance = QueryBlockcypher();
             lastUpdateState = UpdateState.SUCCESS;
             return true;
         } catch (Exception e) {

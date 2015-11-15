@@ -19,6 +19,7 @@ public enum BTCUnit {
         this.value = numVal;
     }
 
+    @SuppressWarnings("unused")
     public static BTCUnit ofNumericValue(String unit) {
         if (unit.equals("" + BTC.value)) return BTC;
         if (unit.equals("" + MBTC.value)) return MBTC;
