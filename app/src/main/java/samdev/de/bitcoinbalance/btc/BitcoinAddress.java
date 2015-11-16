@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.net.URI;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import samdev.de.bitcoinbalance.async.UpdateState;
 import samdev.de.bitcoinbalance.helper.NetworkHelper;
@@ -173,7 +175,29 @@ public class BitcoinAddress {
         return String.format("bitcoin:%s", getFullAddress());
     }
 
-    public static BitcoinAddress parse(String contents) {
+    public static List<BitcoinAddress> parse(String contents) {
+        if (contents == null) return null;
+
+        if (contents.toLowerCase().startsWith("bitcoin:")) contents = contents.substring("bitcoin:".length());
+        if (contents.contains("?")) contents = contents.substring(0, contents.indexOf('?'));
+
+        String[] explosion = contents.split("\\+");
+
+        List<BitcoinAddress> result = new ArrayList<>();
+
+        if (explosion.length == 0) return null;
+
+        for (String piece: explosion) {
+            if (BitcoinHelper.ValidateBitcoinAddress(piece))
+                result.add(new BitcoinAddress(piece));
+            else
+                return null;
+        }
+
+        return result;
+    }
+
+    public static BitcoinAddress parseSingle(String contents) {
         if (contents == null) return null;
 
         if (contents.toLowerCase().startsWith("bitcoin:")) contents = contents.substring("bitcoin:".length());

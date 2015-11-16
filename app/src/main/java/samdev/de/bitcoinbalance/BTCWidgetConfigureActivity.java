@@ -26,6 +26,7 @@ import com.google.zxing.integration.android.IntentResult;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 import samdev.de.bitcoinbalance.async.TaskListener;
@@ -262,12 +263,15 @@ public class BTCWidgetConfigureActivity extends Activity {
         IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
 
         if (scanningResult == null) return;
-        if (scanningResult.getContents() == null) return;
+        String content = scanningResult.getContents();
+        if (content == null) return;
 
-        BitcoinAddress addr = BitcoinAddress.parse(scanningResult.getContents());
+        List<BitcoinAddress> addrList = BitcoinAddress.parse(content);
 
-        if (addr != null) {
-            AddNewAddress(addr);
+        if (addrList != null) {
+            for (BitcoinAddress addr: addrList) {
+                AddNewAddress(addr);
+            }
         } else {
             Toast.makeText(getApplicationContext(), "This is not a valid bitcoin address", Toast.LENGTH_LONG).show();
         }
