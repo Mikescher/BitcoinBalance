@@ -51,29 +51,38 @@ public class BTCWidget extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.btcwidget);
         BitcoinWallet wallet = PreferencesHelper.loadPrefWallet(context, appWidgetId);
 
-        updateDisplay(wallet, views, false);
-        initClickListener(context, appWidgetId, views);
         updateBalance(wallet, context, appWidgetId, views);
 
-        appWidgetManager.updateAppWidget(appWidgetId, views);
+        updateWidget(context, appWidgetManager, appWidgetId, views, wallet, false);
     }
 
-    private static RemoteViews initClickListener(Context context, int appWidgetId, RemoteViews views) {
-        Log.d("BTCBW", String.format("initClickListener(%d)", appWidgetId));
+    private static void updateWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId, RemoteViews views, BitcoinWallet wallet, boolean updatePending) {
+        Log.d("BTCBW", String.format("updateWidget(%d)", appWidgetId));
 
-        // Balance Textbox
+        // UPDATE DISPLAY
+
+        if (updatePending) {
+            views.setTextViewText(R.id.appwidget_btcvalue, "...");
+            views.setTextViewText(R.id.appwidget_state, "updating");
+        } else {
+            views.setTextViewText(R.id.appwidget_btcvalue, wallet.getFormattedBalance());
+            views.setTextViewText(R.id.appwidget_state, wallet.getStateText());
+        }
+
+        views.setImageViewResource(R.id.appwidget_btcicon, wallet.getUnit().getUnitIconResource());
+
+        // UPDATE LISTENER
 
         Intent showAddressIntent = new Intent(context, ShowAddressActivity.class);
         showAddressIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         PendingIntent showAddressPendingIntent = PendingIntent.getActivity(context, appWidgetId, showAddressIntent, 0);
         views.setOnClickPendingIntent(R.id.appwidget_btcvalue, showAddressPendingIntent);
         showAddressIntent.setAction(ShowAddressActivity.class.toString() + Integer.toString(appWidgetId));
-
-        // BTC Icon
-
         views.setOnClickPendingIntent(R.id.appwidget_btcicon, getPendingSelfIntent(context, appWidgetId, ACTION_UPDATE + appWidgetId));
 
-        return views;
+        // SEND TO WIDGET
+
+        appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
     @Override
@@ -92,24 +101,10 @@ public class BTCWidget extends AppWidgetProvider {
         }
     }
 
-    // Needs appWidgetManager.updateAppWidget after call
-    private static void updateDisplay(BitcoinWallet wallet, RemoteViews views, boolean updatePending) {
-        if (updatePending) {
-            views.setTextViewText(R.id.appwidget_btcvalue, "...");
-            views.setTextViewText(R.id.appwidget_state, "updating");
-        } else {
-            views.setTextViewText(R.id.appwidget_btcvalue, wallet.getFormattedBalance());
-            views.setTextViewText(R.id.appwidget_state, wallet.getStateText());
-        }
-
-        views.setImageViewResource(R.id.appwidget_btcicon, wallet.getUnit().getUnitIconResource());
-    }
-
     private static void updateBalance(final BitcoinWallet wallet, final Context context, final int appWidgetId, final RemoteViews views) {
         final AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
 
-        updateDisplay(wallet, views, true);
-        appWidgetManager.updateAppWidget(appWidgetId, views);
+        updateWidget(context, appWidgetManager, appWidgetId, views, wallet, true);
 
         new UpdateWalletBalanceTask(new TaskListener() {
             @Override
@@ -123,8 +118,7 @@ public class BTCWidget extends AppWidgetProvider {
 
                 PreferencesHelper.savePrefWallet(context, appWidgetId, wallet);
 
-                updateDisplay(wallet, views, false);
-                appWidgetManager.updateAppWidget(appWidgetId, views);
+                updateWidget(context, appWidgetManager, appWidgetId, views, wallet, false);
             }
         }, 650).execute(wallet);
     }

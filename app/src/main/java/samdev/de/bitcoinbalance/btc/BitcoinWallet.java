@@ -50,7 +50,7 @@ public class BitcoinWallet {
     }
 
     private String formatLengthSensitive(double v) {
-        if ((int)v == 0) return new DecimalFormat("#.0000").format(v);
+        if ((int)v == 0) return new DecimalFormat("0.0000").format(v);
 
         if (v < 9999) return new DecimalFormat("#.00").format(v);
 
