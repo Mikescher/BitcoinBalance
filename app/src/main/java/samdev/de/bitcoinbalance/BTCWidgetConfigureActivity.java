@@ -36,7 +36,6 @@ import samdev.de.bitcoinbalance.helper.PreferencesHelper;
  * The configuration screen for the {@link BTCWidget BTCWidget} AppWidget.
  */
 public class BTCWidgetConfigureActivity extends Activity {
-    //TODO REMOVE ME ARGH
     String [] EXAMPLES = new String[]
             {
                     "1FmvtS66LFh6ycrXDwKRQTexGJw4UWiqDX",
@@ -93,6 +92,7 @@ public class BTCWidgetConfigureActivity extends Activity {
         });
 
         findViewById(R.id.btnAddressAddManual).setOnClickListener(mOnAddAdressManual);
+        findViewById(R.id.btnAddressAddManual).setOnLongClickListener(mOnAddAdressExample);
         findViewById(R.id.btnAddressAddQR).setOnClickListener(mOnAddAdressQR);
         findViewById(R.id.btnAdd).setOnClickListener(mOnFinish);
         findViewById(R.id.btnAbort).setOnClickListener(mOnAbort);
@@ -121,7 +121,7 @@ public class BTCWidgetConfigureActivity extends Activity {
             final EditText input = new EditText(context);
             input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
 
-            input.setText(EXAMPLES[new Random().nextInt(EXAMPLES.length)]); //TODO 4 debug only --rem--
+            input.setText("");
             builder.setView(input);
 
             builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
@@ -145,6 +145,13 @@ public class BTCWidgetConfigureActivity extends Activity {
             });
 
             builder.show();
+        }
+    };
+
+    View.OnLongClickListener mOnAddAdressExample = new View.OnLongClickListener() {
+        public boolean onLongClick(View v) {
+            AddNewAddress(EXAMPLES[new Random().nextInt(EXAMPLES.length)]);
+            return true;
         }
     };
 
