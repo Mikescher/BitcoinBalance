@@ -51,7 +51,11 @@ public class BTCWidgetConfigureActivity extends Activity {
                     "1Kz25jm6pjNTaz8bFezEYUeBYfEtpjuKRG",
                     "15KXVQv7UGtUoTe5VNWXT1bMz46MXuePba",
                     "1VESCU4YLvNYhmTsJRgFKKn3bLFeeWtJm",
-                    "1BitPoPevGTcnSGWqHGrFiVg6fVC7y9NVK"
+                    "1BitPoPevGTcnSGWqHGrFiVg6fVC7y9NVK",
+                    "1BitcoinEaterAddressDontSendf59kuE",
+                    "1CounterpartyXXXXXXXXXXXXXXXUWLpVr",
+                    "1111111111111111111114oLvT2",
+                    "1QLbz7JHiBTspS962RLKV8GndWFwi5j6Qr"
             };
 
     int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
