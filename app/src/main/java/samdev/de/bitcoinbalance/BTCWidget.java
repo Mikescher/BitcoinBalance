@@ -31,6 +31,8 @@ public class BTCWidget extends AppWidgetProvider {
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
         for (int appWidgetId : appWidgetIds) {
+            Log.d("BTCBW", "Delete wallet: " + appWidgetId);
+
             PreferencesHelper.deletePrefWallet(context, appWidgetId);
         }
     }

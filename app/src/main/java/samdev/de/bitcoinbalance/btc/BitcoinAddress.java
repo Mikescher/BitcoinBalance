@@ -33,6 +33,7 @@ public class BitcoinAddress {
     public boolean updateValue() {
         try {
             balance = QueryBlockchain();
+            Log.w("BTCBW", "Updated via blockchain.info");
             lastUpdateState = UpdateState.SUCCESS;
             return true;
         } catch (Exception e) {
@@ -41,6 +42,7 @@ public class BitcoinAddress {
 
         try {
             balance = QueryBlockexplorer();
+            Log.w("BTCBW", "Updated via blockexplorer.com");
             lastUpdateState = UpdateState.SUCCESS;
             return true;
         } catch (Exception e) {
@@ -49,6 +51,7 @@ public class BitcoinAddress {
 
         try {
             balance = QueryToshi();
+            Log.w("BTCBW", "Updated via toshi.io");
             lastUpdateState = UpdateState.SUCCESS;
             return true;
         } catch (Exception e) {
@@ -57,6 +60,7 @@ public class BitcoinAddress {
 
         try {
             balance = QueryBlockcypher();
+            Log.w("BTCBW", "Updated via blockcypher.com");
             lastUpdateState = UpdateState.SUCCESS;
             return true;
         } catch (Exception e) {
