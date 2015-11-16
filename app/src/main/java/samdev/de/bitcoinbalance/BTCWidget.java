@@ -138,5 +138,3 @@ public class BTCWidget extends AppWidgetProvider {
 }
 
 //TODO new and _IMPROVED_ logo
-//TODO delay when initial opening ShowAddr Activity (log on handy) --> or start when finished showing ?
-//TODO no animation when cloding ShowAddr Activit with Home (is activity re-ued) ?
