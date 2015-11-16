@@ -232,4 +232,12 @@ public class QRCodeView extends View {
             clet.movementMultiplier = 1.35f;
         }
     }
+
+    public void hardReset(boolean refresh) {
+        codelets.clear();
+        currentMatrix = null;
+
+        mHandler.removeCallbacks(mTick);
+        if (refresh) invalidate();
+    }
 }

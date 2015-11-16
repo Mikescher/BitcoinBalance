@@ -1,6 +1,7 @@
 package samdev.de.bitcoinbalance;
 
 import android.appwidget.AppWidgetManager;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -38,7 +39,16 @@ public class ShowAddressActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("BTCBW", "ShowAddressActivity::onCreate");
+
         setContentView(R.layout.activity_show_address);
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d("BTCBW", "ShowAddressActivity::onStart");
 
         wallet = PreferencesHelper.loadPrefWallet(this, getIntent().getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1));
         qrView = (QRCodeView)findViewById(R.id.showaddr_qrview);
@@ -53,7 +63,17 @@ public class ShowAddressActivity extends AppCompatActivity {
         });
         addressView.setAdapter(new AddressListBigAdapter(wallet.getAddresses(), this));
 
-        if (wallet.hasMainAddress()) setQRCode(wallet.getMainAddress());
+        qrView.hardReset(true);
+        if (wallet.hasMainAddress()) {
+            Handler delay = new Handler();
+            delay.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    qrView.hardReset(false);
+                    setQRCode(wallet.getMainAddress());
+                }
+            }, 850);
+        }
     }
 
     private void setQRCode(BitcoinAddress addr) {

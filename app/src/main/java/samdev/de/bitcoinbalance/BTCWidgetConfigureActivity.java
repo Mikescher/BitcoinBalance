@@ -258,6 +258,7 @@ public class BTCWidgetConfigureActivity extends Activity {
         IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
 
         if (scanningResult == null) return;
+        if (scanningResult.getContents() == null) return;
 
         BitcoinAddress addr = BitcoinAddress.parse(scanningResult.getContents());
 
