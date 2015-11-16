@@ -103,7 +103,7 @@ public class QRCodeView extends View {
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        canvas.drawColor(Color.WHITE);
+        canvas.drawColor(Color.TRANSPARENT);
 
         float w = (canvas.getWidth() * 1f) / qrWidth;
         float h = (canvas.getHeight() * 1f) / qrHeight;
