@@ -8,8 +8,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.DataSetObserver;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
+import android.os.Vibrator;
 import android.text.InputType;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -93,6 +97,7 @@ public class BTCWidgetConfigureActivity extends Activity {
 
         findViewById(R.id.btnAddressAddManual).setOnClickListener(mOnAddAdressManual);
         findViewById(R.id.btnAddressAddManual).setOnLongClickListener(mOnAddAdressExample);
+        findViewById(R.id.btnAddressAddManual).setOnTouchListener(mLongClickAddListener);
         findViewById(R.id.btnAddressAddQR).setOnClickListener(mOnAddAdressQR);
         findViewById(R.id.btnAdd).setOnClickListener(mOnFinish);
         findViewById(R.id.btnAbort).setOnClickListener(mOnAbort);
@@ -148,10 +153,44 @@ public class BTCWidgetConfigureActivity extends Activity {
         }
     };
 
+    View.OnTouchListener mLongClickAddListener = new View.OnTouchListener() {
+        private final static int LONG_PRESS_TIME = 3000; // 3 seconds long click for debug
+
+        private boolean isLongPress = false;
+        private long startTime = 0;
+        private Handler handler = new Handler();
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                isLongPress = true;
+                startTime = SystemClock.uptimeMillis();
+                handler.removeCallbacks(Run);
+                handler.postDelayed(Run, LONG_PRESS_TIME);
+
+                return false;
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                isLongPress = false;
+                return SystemClock.uptimeMillis()-startTime >= LONG_PRESS_TIME;
+            }
+            return false;
+        }
+
+        private Runnable Run = new Runnable() {
+            @Override
+            public void run() {
+                if (isLongPress) {
+                    Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                    vibrator.vibrate(100);
+
+                    AddNewAddress(EXAMPLES[new Random().nextInt(EXAMPLES.length)]);
+                }
+            }
+        };
+    };
+
     View.OnLongClickListener mOnAddAdressExample = new View.OnLongClickListener() {
         public boolean onLongClick(View v) {
-            AddNewAddress(EXAMPLES[new Random().nextInt(EXAMPLES.length)]);
-            return true;
+            return false;
         }
     };
 
@@ -217,6 +256,8 @@ public class BTCWidgetConfigureActivity extends Activity {
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+
+        if (scanningResult == null) return;
 
         BitcoinAddress addr = BitcoinAddress.parse(scanningResult.getContents());
 

@@ -170,6 +170,8 @@ public class BitcoinAddress {
     }
 
     public static BitcoinAddress parse(String contents) {
+        if (contents == null) return null;
+
         if (contents.toLowerCase().startsWith("bitcoin:")) contents = contents.substring("bitcoin:".length());
         if (contents.contains("?")) contents = contents.substring(0, contents.indexOf('?'));
 
