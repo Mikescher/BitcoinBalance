@@ -42,7 +42,17 @@ public enum BTCUnit {
         return BTC;
     }
 
+    public String asString() {
+        switch(this) {
+            case BTC:     return "BTC";
+            case MBTC:    return "mBTC";
+            case BITS:    return "bits";
+            case SATOSHI: return "satoshi";
+        }
 
+        Log.e("BTCBW", "Unknwon displayUnit: " + this);
+        return "?";
+    }
 
     public int getUnitIconResource() {
         switch(this) {

@@ -28,8 +28,7 @@ public class BitcoinWallet {
         long balance = 0;
 
         for (BitcoinAddress addr: addresses) {
-            if (addr.getStatus() != UpdateState.INITIAL)
-            balance += addr.getBalance();
+            if (addr.getStatus() != UpdateState.INITIAL)  balance += addr.getBalance();
         }
 
         return balance;
@@ -47,6 +46,20 @@ public class BitcoinWallet {
         }
 
         return formatLengthSensitive(balance / displayUnit.getConversionFactor());
+    }
+
+    public String getNotificationFormattedBalance() {
+        if (addresses.isEmpty()) return "::EMPTY::";
+
+        long balance = 0;
+
+        for (BitcoinAddress addr: addresses) {
+            if (addr.getStatus() == UpdateState.INITIAL) return "::ERROR::";
+            if (addr.getStatus() == UpdateState.ERROR) return "::ERROR::";
+            balance += addr.getBalance();
+        }
+
+        return formatLengthSensitive(balance / displayUnit.getConversionFactor()) + " " + displayUnit.asString();
     }
 
     private String formatLengthSensitive(double v) {
@@ -138,6 +151,15 @@ public class BitcoinWallet {
         }
 
         return "";
+    }
+
+    public boolean isSuccessState() {
+        for (BitcoinAddress addr: addresses) {
+            if (addr.getStatus() == UpdateState.ERROR) return false;
+            if (addr.getStatus() == UpdateState.INITIAL) return false;
+        }
+
+        return true;
     }
 
     public ArrayList<BitcoinAddress> getAddresses() {

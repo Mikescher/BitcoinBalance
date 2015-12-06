@@ -1,10 +1,13 @@
 package samdev.de.bitcoinbalance;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
 
@@ -24,7 +27,7 @@ public class BTCWidget extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         for (int appWidgetId : appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId);
+            updateAppWidget(context, appWidgetManager, appWidgetId, true);
         }
     }
 
@@ -47,13 +50,13 @@ public class BTCWidget extends AppWidgetProvider {
         // NOP
     }
 
-    public static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
-        Log.d("BTCBW", String.format("updateAppWidget(%d)", appWidgetId));
+    public static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId, boolean nativeUpdate) {
+        Log.d("BTCBW", String.format("updateAppWidget(%d) (native=%d)", appWidgetId, nativeUpdate?1:0));
 
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.btcwidget);
         BitcoinWallet wallet = PreferencesHelper.loadPrefWallet(context, appWidgetId);
 
-        updateBalance(wallet, context, appWidgetId, views);
+        updateBalance(wallet, context, appWidgetId, views, nativeUpdate);
 
         updateWidget(context, appWidgetManager, appWidgetId, views, wallet, false);
     }
@@ -99,12 +102,15 @@ public class BTCWidget extends AppWidgetProvider {
 
             BitcoinWallet wallet = PreferencesHelper.loadPrefWallet(context, appWidgetId);
 
-            updateBalance(wallet, context, appWidgetId, views);
+            updateBalance(wallet, context, appWidgetId, views, false);
         }
     }
 
-    private static void updateBalance(final BitcoinWallet wallet, final Context context, final int appWidgetId, final RemoteViews views) {
+    private static void updateBalance(final BitcoinWallet wallet, final Context context, final int appWidgetId, final RemoteViews views, final boolean showNotification) {
         final AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+
+        final boolean hasInitialbalance = wallet.isSuccessState();
+        final long initialBalance = wallet.getBalance();
 
         updateWidget(context, appWidgetManager, appWidgetId, views, wallet, true);
 
@@ -121,6 +127,24 @@ public class BTCWidget extends AppWidgetProvider {
                 PreferencesHelper.savePrefWallet(context, appWidgetId, wallet);
 
                 updateWidget(context, appWidgetManager, appWidgetId, views, wallet, false);
+
+
+                Log.d("BTCBW", "A" + showNotification);
+                Log.d("BTCBW", "B"+hasInitialbalance);
+                Log.d("BTCBW", "C"+(wallet.getBalance() == initialBalance));
+                if (wallet.hasMainAddress() && showNotification && hasInitialbalance && wallet.getBalance() != initialBalance) {
+
+                    Notification notific = new NotificationCompat.Builder(context)
+                            .setSmallIcon(R.drawable.logo_notifications)
+                            .setContentTitle("Bitcoin Balance changed")
+                            .setContentText(wallet.getNotificationFormattedBalance())
+                            .setAutoCancel(true)
+                            .build();
+
+                    NotificationManager nman = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+                    nman.notify(2634890, notific);
+                }
             }
         }, 650).execute(wallet);
     }

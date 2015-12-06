@@ -243,7 +243,7 @@ public class BTCWidgetConfigureActivity extends Activity {
             PreferencesHelper.savePrefWallet(context, mAppWidgetId, getWallet());
 
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-            BTCWidget.updateAppWidget(context, appWidgetManager, mAppWidgetId);
+            BTCWidget.updateAppWidget(context, appWidgetManager, mAppWidgetId, false);
 
             Intent resultValue = new Intent();
             resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
