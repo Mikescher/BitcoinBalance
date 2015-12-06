@@ -16,9 +16,11 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -61,11 +63,9 @@ public class BTCWidgetConfigureActivity extends Activity {
 
     int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 
-    private RadioButton btnUnit0;
-    private RadioButton btnUnit1;
-    private RadioButton btnUnit2;
-    private RadioButton btnUnit3;
+    private Spinner unitspinner;
     private Button btnFinish;
+    private CheckBox cbShowNotifications;
 
     private AddressListAdapter addressAdapter;
     private ArrayList<BitcoinAddress> addresses = new ArrayList<>();
@@ -84,10 +84,8 @@ public class BTCWidgetConfigureActivity extends Activity {
 
         ListView addressView = (ListView) findViewById(R.id.adressesList);
 
-        btnUnit0    = (RadioButton) findViewById(R.id.rbUnit0);
-        btnUnit1    = (RadioButton) findViewById(R.id.rbUnit1);
-        btnUnit2    = (RadioButton) findViewById(R.id.rbUnit2);
-        btnUnit3    = (RadioButton) findViewById(R.id.rbUnit3);
+        unitspinner    = (Spinner) findViewById(R.id.unitspinner);
+        cbShowNotifications    = (CheckBox) findViewById(R.id.cbShowNotifications);
         btnFinish   = (Button) findViewById(R.id.btnAdd);
 
         addressAdapter = new AddressListAdapter(addresses, this);
@@ -278,16 +276,16 @@ public class BTCWidgetConfigureActivity extends Activity {
     }
 
     private BTCUnit getSelectedUnit() {
-        if (btnUnit0.isChecked()) return BTCUnit.BTC;
-        if (btnUnit1.isChecked()) return BTCUnit.MBTC;
-        if (btnUnit2.isChecked()) return BTCUnit.BITS;
-        if (btnUnit3.isChecked()) return BTCUnit.SATOSHI;
+        if (unitspinner.getSelectedItemPosition() == 0) return BTCUnit.BTC;
+        if (unitspinner.getSelectedItemPosition() == 1) return BTCUnit.MBTC;
+        if (unitspinner.getSelectedItemPosition() == 2) return BTCUnit.BITS;
+        if (unitspinner.getSelectedItemPosition() == 3) return BTCUnit.SATOSHI;
 
         return BTCUnit.BTC;
     }
 
     private BitcoinWallet getWallet() {
-        BitcoinWallet wallet = new BitcoinWallet(getSelectedUnit());
+        BitcoinWallet wallet = new BitcoinWallet(getSelectedUnit(), cbShowNotifications.isChecked());
 
         for (BitcoinAddress addr: addresses) {
             wallet.addAddress(addr);

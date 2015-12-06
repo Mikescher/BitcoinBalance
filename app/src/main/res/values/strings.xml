@@ -13,4 +13,11 @@
     <string name="add_widget">Create Widget</string>
     <string name="abort_widget">Abort</string>
     <string name="title_activity_show_address">ShowAddressActivity</string>
+
+    <string-array name="unitlist">
+        <item>BTC</item>
+        <item>mBTC</item>
+        <item>bits</item>
+        <item>satoshi</item>
+    </string-array>
 </resources>

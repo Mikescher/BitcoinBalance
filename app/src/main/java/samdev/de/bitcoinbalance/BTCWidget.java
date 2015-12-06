@@ -128,11 +128,7 @@ public class BTCWidget extends AppWidgetProvider {
 
                 updateWidget(context, appWidgetManager, appWidgetId, views, wallet, false);
 
-
-                Log.d("BTCBW", "A" + showNotification);
-                Log.d("BTCBW", "B"+hasInitialbalance);
-                Log.d("BTCBW", "C"+(wallet.getBalance() == initialBalance));
-                if (wallet.hasMainAddress() && showNotification && hasInitialbalance && wallet.getBalance() != initialBalance) {
+                if (wallet.showNotification && wallet.hasMainAddress() && showNotification && hasInitialbalance && wallet.getBalance() != initialBalance) {
 
                     Notification notific = new NotificationCompat.Builder(context)
                             .setSmallIcon(R.drawable.logo_notifications)

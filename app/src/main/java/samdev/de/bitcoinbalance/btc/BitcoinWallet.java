@@ -15,13 +15,16 @@ import samdev.de.bitcoinbalance.async.UpdateState;
 public class BitcoinWallet {
     private List<BitcoinAddress> addresses = new ArrayList<>();
     private final BTCUnit displayUnit;
+    public final boolean showNotification;
 
-    public BitcoinWallet(BTCUnit unit) {
+    public BitcoinWallet(BTCUnit unit, boolean showNotific) {
         displayUnit = unit;
+        showNotification = showNotific;
     }
 
     public BitcoinWallet() {
         displayUnit = BTCUnit.BTC;
+        showNotification = false;
     }
 
     public long getBalance() {
@@ -92,6 +95,7 @@ public class BitcoinWallet {
             }
 
             obj.put("unit", displayUnit.getIDValue());
+            obj.put("shownotifications", showNotification);
             obj.put("addresses", addrArray);
 
             return obj.toString();
@@ -111,7 +115,8 @@ public class BitcoinWallet {
             JSONObject obj = new JSONObject(data);
 
             BTCUnit unit = BTCUnit.ofNumericValue(obj.getInt("unit"));
-            BitcoinWallet wallet = new BitcoinWallet(unit);
+            boolean showNotific = obj.has("shownotifications") ? obj.getBoolean("shownotifications") : false;
+            BitcoinWallet wallet = new BitcoinWallet(unit, showNotific);
 
             JSONArray addrArray = obj.getJSONArray("addresses");
             for (int i = 0; i < addrArray.length(); i++) {

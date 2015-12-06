@@ -62,48 +62,35 @@
                 android:layout_height="25dp"
                 android:layout_weight="0.87" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:id="@+id/textView2"
-                android:text="@string/unit" />
 
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
 
-            <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:id="@+id/textView2"
+                    android:text="@string/unit" />
+
+                <Spinner
+                    android:id="@+id/unitspinner"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/textView2"
+                    android:layout_marginLeft="10dp"
+                    android:entries="@array/unitlist" />
+
+            </RelativeLayout>
+
+            <CheckBox
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="15dp"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/unit0"
-                    android:id="@+id/rbUnit0"
-                    android:checked="true" />
-
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/unit1"
-                    android:id="@+id/rbUnit1"
-                    android:layout_weight="0.87" />
-
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/unit2"
-                    android:id="@+id/rbUnit2"
-                    android:layout_weight="0.87" />
-
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/unit3"
-                    android:id="@+id/rbUnit3"
-                    android:layout_weight="0.87" />
-
-            </RadioGroup>
+                android:id="@+id/cbShowNotifications"
+                android:text="Show notifications on balance changes"/>
 
             <LinearLayout
                 android:orientation="horizontal"
