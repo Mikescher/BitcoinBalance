@@ -18,9 +18,7 @@ import samdev.de.bitcoinbalance.helper.NetworkHelper;
 public class BitcoinAddress {
     private final static String URL_BLOCKCHAIN    = "https://blockchain.info/q/addressbalance/%s?confirmations=6";
     private final static String URL_BLOCKEXPLORER = "https://blockexplorer.com/api/addr/%s/balance";
-    private final static String URL_TOSHI         = "https://bitcoin.toshi.io/api/v0/addresses/%s";
     private final static String URL_BLOCKCYPHER   = "https://api.blockcypher.com/v1/btc/main/addrs/%s/balance";
-
 
     private final String address;
 
@@ -49,15 +47,6 @@ public class BitcoinAddress {
             return true;
         } catch (Exception e) {
             Log.w("BTCBW", "Site not reachable: blockexplorer.com");
-        }
-
-        try {
-            balance = QueryToshi();
-            Log.w("BTCBW", "Updated via toshi.io");
-            lastUpdateState = UpdateState.SUCCESS;
-            return true;
-        } catch (Exception e) {
-            Log.w("BTCBW", "Site not reachable: toshi.io");
         }
 
         try {
@@ -96,13 +85,6 @@ public class BitcoinAddress {
         if (value < 0) throw new InvalidObjectException("value is " + value + "' for blockexplorer.com in " + address);
 
         return value;
-    }
-
-    private long QueryToshi() throws JSONException, IOException, NumberFormatException {
-        String content = NetworkHelper.GetHttpContent(String.format(URL_TOSHI, address));
-        JSONObject obj = new JSONObject(content);
-
-        return obj.getLong("balance");
     }
 
     private long QueryBlockcypher() throws JSONException, IOException, NumberFormatException {
